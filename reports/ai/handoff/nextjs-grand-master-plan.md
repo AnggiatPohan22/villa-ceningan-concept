@@ -107,7 +107,7 @@ Tasks:
 - [Done] Add SEO metadata, Open Graph image, canonical handling, and lodging structured data.
 - [Done] Optimize copied Next.js runtime images into WebP and remove unused copied JPG files from `public/assets/img`.
 - [Done] Add responsive CSS for mobile, tablet, and desktop layouts.
-- [In Progress] Add browser screenshot QA for mobile, tablet, and desktop.
+- [Done] Add browser screenshot QA for mobile, tablet, and desktop.
 - [Done] Add README with local setup, build, and deployment instructions.
 - [Done] Add `/villa` page as the villa/room landing page.
 - [Done] Add three room types with varied pricing: Island Suite, Garden Villa, and Family Stay.
@@ -121,6 +121,11 @@ Tasks:
 - [Done] Adjust header menu shape from long pill to a softer rectangular bar with moderate radius.
 - [Done] Convert index hero to a full-image hero with headline, intro copy, CTA, and booking form layered on top of the image.
 - [Done] Add a mobile header menu so navigation remains available on small screens.
+- [Done] Direct booking CTAs to WhatsApp `+62 823 8635 7012`.
+- [Done] Save Phase 1 responsive QA screenshots:
+  - `reports/ai/handoff/phase-1-qa-desktop.png`
+  - `reports/ai/handoff/phase-1-qa-tablet.png`
+  - `reports/ai/handoff/phase-1-qa-mobile.png`
 
 Deliverable:
 
@@ -263,11 +268,11 @@ Recommended template variants:
 1. [Done] Run dependency installation with `npm.cmd install`.
 2. [Done] Run `npm.cmd run dev`.
 3. [Done] Open the local Next.js preview.
-4. [Pending] Replace placeholder phone, email, and WhatsApp values in `src/data/property.ts`.
+4. [Done] Replace placeholder phone, email, and WhatsApp values in `src/data/property.ts`.
 5. [Done] Optimize copied images under `public/assets/img`.
 6. [Done] Split homepage into components.
 7. [Done] Add room and booking pages.
-8. [Pending] Decide whether the first production release should use inquiry-only booking or database-backed availability.
+8. [Done] Decide first production release direction: inquiry-only booking via direct WhatsApp, before database-backed availability.
 9. [Done] Add `/villa` landing page and three priced room types.
 10. [Done] Add generated room sample images for Island Suite, Garden Villa, and Family Stay.
 11. [Done] Redesign index hero/menu with dark luxury coastal concept and responsive hero booking panel.

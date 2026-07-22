@@ -6,9 +6,9 @@ export const property = {
   description:
     "A reusable Next.js hospitality template foundation for villas, guest houses, boutique hotels, and small resorts.",
   location: "Nusa Ceningan, Bali",
-  phone: "+62 812 3456 7890",
-  email: "stay@villaceningan.example",
-  whatsapp: "6281234567890",
+  phone: "+62 823 8635 7012",
+  email: "hello@villaceningan.com",
+  whatsapp: "6282386357012",
   bookingMessage: "Hello Villa Ceningan, I would like to check availability for my stay.",
   address: "Nusa Ceningan, Klungkung, Bali, Indonesia",
   siteUrl: "https://example.com",
