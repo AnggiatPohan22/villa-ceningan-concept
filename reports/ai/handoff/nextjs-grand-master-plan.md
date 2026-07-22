@@ -138,16 +138,17 @@ Purpose: capture booking intent without overbuilding inventory logic too early.
 Tasks:
 
 - [Done] Add `/booking` page.
-- [In Progress] Build date picker, guest count, room preference, guest details, and special request fields.
-- [Pending] Validate form data.
-- [Pending] Submit inquiry to an API route.
-- [Pending] Send email or WhatsApp-ready inquiry message.
-- [Pending] Store inquiry records if a database is introduced.
+- [Done] Build date picker, guest count, room preference, guest details, and special request fields.
+- [Done] Validate form data.
+- [Done] Submit inquiry to an API route.
+- [Done] Send WhatsApp-ready inquiry message.
+- [Done] Redirect successful inquiries to WhatsApp `+62 823 8635 7012`.
+- [Deferred] Store inquiry records after a database is introduced.
 
 Deliverable:
 
-- Users can submit a structured booking inquiry.
-- Property owner receives actionable booking details.
+- [Done] Users can submit a structured booking inquiry.
+- [Done] Property owner receives actionable booking details through WhatsApp.
 
 ### Phase 3 - Room Inventory Model
 
@@ -278,6 +279,8 @@ Recommended template variants:
 11. [Done] Redesign index hero/menu with dark luxury coastal concept and responsive hero booking panel.
 12. [Done] Polish index hero/menu/form from latest screenshot: green tone, softer radius, cleaner hero image composition.
 13. [Done] Make index hero full-image and add responsive mobile menu.
+14. [Done] Build validated booking inquiry form and `/api/booking-inquiries` endpoint.
+15. [Done] Direct successful booking inquiries to WhatsApp `+62 823 8635 7012`.
 
 ## 8. Risk Notes
 

@@ -409,11 +409,17 @@ p {
 }
 
 .booking-panel--hero input,
-.booking-panel--hero select {
+.booking-panel--hero select,
+.booking-panel--hero textarea {
   min-height: 38px;
   border-color: rgba(255, 255, 255, 0.1);
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
+}
+
+.booking-panel--hero input::placeholder,
+.booking-panel--hero textarea::placeholder {
+  color: rgba(255, 255, 255, 0.46);
 }
 
 .booking-panel--hero .button {
@@ -432,7 +438,8 @@ p {
 }
 
 .booking-panel input,
-.booking-panel select {
+.booking-panel select,
+.booking-panel textarea {
   width: 100%;
   min-height: 44px;
   border: 1px solid var(--color-line);
@@ -441,6 +448,55 @@ p {
   color: var(--color-ink);
   background: #fff;
   font: inherit;
+}
+
+.booking-panel textarea {
+  min-height: 112px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.booking-panel em {
+  color: #d66b4d;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+.booking-panel__wide,
+.booking-panel__error {
+  grid-column: 1 / -1;
+}
+
+.booking-panel__error {
+  margin: 0;
+  color: #ffd5ca;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.booking-panel--default .booking-panel__header {
+  color: var(--color-forest);
+}
+
+.booking-panel--default .booking-panel__header small {
+  color: var(--color-muted);
+}
+
+.booking-panel--default .booking-panel__error {
+  color: #b94d35;
+}
+
+.booking-panel__submit {
+  width: 100%;
+  align-self: end;
+  cursor: pointer;
+}
+
+.booking-panel__submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
 }
 
 .section {
@@ -1047,9 +1103,7 @@ details p {
   }
 
   .hero-topline {
-    left: 18px;
-    right: 18px;
-    bottom: 330px;
+    display: none;
   }
 
   .booking-panel--hero {
