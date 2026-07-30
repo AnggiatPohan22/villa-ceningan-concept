@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { rooms } from "@/data/rooms";
 import type { BookingInquiryPayload } from "@/lib/booking/booking-inquiry";
 
@@ -22,6 +22,53 @@ const initialForm: BookingInquiryPayload = {
   source: "Website booking inquiry"
 };
 
+const countryDialCodes = [
+  { name: "Indonesia", dialCode: "+62", iso: "ID" },
+  { name: "Australia", dialCode: "+61", iso: "AU" },
+  { name: "United States", dialCode: "+1", iso: "US" },
+  { name: "United Kingdom", dialCode: "+44", iso: "GB" },
+  { name: "Singapore", dialCode: "+65", iso: "SG" },
+  { name: "Malaysia", dialCode: "+60", iso: "MY" },
+  { name: "Thailand", dialCode: "+66", iso: "TH" },
+  { name: "Philippines", dialCode: "+63", iso: "PH" },
+  { name: "Vietnam", dialCode: "+84", iso: "VN" },
+  { name: "Japan", dialCode: "+81", iso: "JP" },
+  { name: "South Korea", dialCode: "+82", iso: "KR" },
+  { name: "China", dialCode: "+86", iso: "CN" },
+  { name: "Hong Kong", dialCode: "+852", iso: "HK" },
+  { name: "India", dialCode: "+91", iso: "IN" },
+  { name: "United Arab Emirates", dialCode: "+971", iso: "AE" },
+  { name: "Saudi Arabia", dialCode: "+966", iso: "SA" },
+  { name: "Germany", dialCode: "+49", iso: "DE" },
+  { name: "France", dialCode: "+33", iso: "FR" },
+  { name: "Netherlands", dialCode: "+31", iso: "NL" },
+  { name: "Italy", dialCode: "+39", iso: "IT" },
+  { name: "Spain", dialCode: "+34", iso: "ES" },
+  { name: "Switzerland", dialCode: "+41", iso: "CH" },
+  { name: "Sweden", dialCode: "+46", iso: "SE" },
+  { name: "Norway", dialCode: "+47", iso: "NO" },
+  { name: "Denmark", dialCode: "+45", iso: "DK" },
+  { name: "New Zealand", dialCode: "+64", iso: "NZ" },
+  { name: "Canada", dialCode: "+1", iso: "CA" },
+  { name: "Brazil", dialCode: "+55", iso: "BR" },
+  { name: "Mexico", dialCode: "+52", iso: "MX" },
+  { name: "South Africa", dialCode: "+27", iso: "ZA" }
+];
+
+function clampGuestCount(value: number) {
+  return Math.min(12, Math.max(1, value));
+}
+
+function openDatePicker(input: HTMLInputElement | null) {
+  input?.focus();
+
+  try {
+    (input as (HTMLInputElement & { showPicker?: () => void }) | null)?.showPicker?.();
+  } catch {
+    // Some browsers only allow showPicker during direct pointer interaction.
+  }
+}
+
 export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanelProps) {
   const [form, setForm] = useState<BookingInquiryPayload>({
     ...initialForm,
@@ -29,10 +76,44 @@ export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanel
   });
   const [errors, setErrors] = useState<BookingErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(countryDialCodes[0]);
+  const [countryQuery, setCountryQuery] = useState(countryDialCodes[0].name);
+  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const checkInRef = useRef<HTMLInputElement>(null);
+  const checkOutRef = useRef<HTMLInputElement>(null);
+
+  const countryResults = countryDialCodes
+    .filter((country) => {
+      const query = countryQuery.trim().toLowerCase();
+
+      return !query || country.name.toLowerCase().includes(query) || country.dialCode.includes(query) || country.iso.toLowerCase().includes(query);
+    })
+    .slice(0, 6);
 
   function updateField(name: keyof BookingInquiryPayload, value: string) {
     setForm((current) => ({ ...current, [name]: value }));
     setErrors((current) => ({ ...current, [name]: undefined, dateRange: undefined, form: undefined }));
+  }
+
+  function updatePhone(countryCode: string, number: string) {
+    updateField("guestPhone", `${countryCode} ${number}`.trim());
+  }
+
+  function selectCountry(country: (typeof countryDialCodes)[number]) {
+    setSelectedCountry(country);
+    setCountryQuery(country.name);
+    setIsCountryOpen(false);
+    updatePhone(country.dialCode, phoneNumber);
+  }
+
+  function updatePhoneNumber(value: string) {
+    setPhoneNumber(value);
+    updatePhone(selectedCountry.dialCode, value);
+  }
+
+  function updateGuests(value: number) {
+    updateField("guests", String(clampGuestCount(value)));
   }
 
   async function submitInquiry(event: FormEvent<HTMLFormElement>) {
@@ -78,9 +159,12 @@ export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanel
       <label>
         <span>Check In</span>
         <input
+          ref={checkInRef}
           type="date"
           name="checkIn"
           value={form.checkIn}
+          onClick={() => openDatePicker(checkInRef.current)}
+          onFocus={() => openDatePicker(checkInRef.current)}
           onChange={(event) => updateField("checkIn", event.target.value)}
           aria-invalid={Boolean(errors.checkIn)}
         />
@@ -90,9 +174,12 @@ export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanel
       <label>
         <span>Check Out</span>
         <input
+          ref={checkOutRef}
           type="date"
           name="checkOut"
           value={form.checkOut}
+          onClick={() => openDatePicker(checkOutRef.current)}
+          onFocus={() => openDatePicker(checkOutRef.current)}
           onChange={(event) => updateField("checkOut", event.target.value)}
           aria-invalid={Boolean(errors.checkOut || errors.dateRange)}
         />
@@ -101,18 +188,24 @@ export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanel
 
       <label>
         <span>Guests</span>
-        <select
-          name="guests"
-          value={form.guests}
-          onChange={(event) => updateField("guests", event.target.value)}
-          aria-invalid={Boolean(errors.guests)}
-        >
-          {Array.from({ length: 12 }, (_, index) => String(index + 1)).map((value) => (
-            <option key={value} value={value}>
-              {value} {value === "1" ? "guest" : "guests"}
-            </option>
-          ))}
-        </select>
+        <div className="booking-panel__stepper">
+          <button type="button" aria-label="Decrease guests" onClick={() => updateGuests(Number(form.guests || 1) - 1)}>
+            -
+          </button>
+          <input
+            type="number"
+            name="guests"
+            min="1"
+            max="12"
+            inputMode="numeric"
+            value={form.guests}
+            onChange={(event) => updateGuests(Number(event.target.value || 1))}
+            aria-invalid={Boolean(errors.guests)}
+          />
+          <button type="button" aria-label="Increase guests" onClick={() => updateGuests(Number(form.guests || 1) + 1)}>
+            +
+          </button>
+        </div>
         {errors.guests ? <em>{errors.guests}</em> : null}
       </label>
 
@@ -147,21 +240,6 @@ export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanel
       </label>
 
       <label>
-        <span>Phone / WhatsApp</span>
-        <input
-          type="tel"
-          name="guestPhone"
-          placeholder="+62..."
-          value={form.guestPhone}
-          onChange={(event) => updateField("guestPhone", event.target.value)}
-          aria-invalid={Boolean(errors.guestPhone)}
-        />
-        {errors.guestPhone ? <em>{errors.guestPhone}</em> : null}
-      </label>
-
-      {variant === "default" ? (
-        <>
-          <label>
             <span>Email</span>
             <input
               type="email"
@@ -172,9 +250,64 @@ export function BookingInquiryPanel({ variant = "default" }: BookingInquiryPanel
               aria-invalid={Boolean(errors.guestEmail)}
             />
             {errors.guestEmail ? <em>{errors.guestEmail}</em> : null}
-          </label>
+      </label>
 
-          <label className="booking-panel__wide">
+      <div className="booking-panel__phone-group">
+        <label className="booking-panel__country">
+          <span>Country Code</span>
+          <input
+            type="search"
+            value={countryQuery}
+            onChange={(event) => {
+              setCountryQuery(event.target.value);
+              setIsCountryOpen(true);
+            }}
+            onFocus={() => setIsCountryOpen(true)}
+            onBlur={() => window.setTimeout(() => setIsCountryOpen(false), 140)}
+            aria-label="Search country code"
+            aria-expanded={isCountryOpen}
+            aria-controls="booking-country-results"
+            aria-autocomplete="list"
+            role="combobox"
+          />
+          <small>{selectedCountry.iso} {selectedCountry.dialCode}</small>
+          {isCountryOpen ? (
+            <div className="booking-panel__country-results" id="booking-country-results" role="listbox">
+              {countryResults.map((country) => (
+                <button
+                  aria-selected={selectedCountry.iso === country.iso}
+                  key={`${country.iso}-${country.dialCode}`}
+                  type="button"
+                  onClick={() => selectCountry(country)}
+                  onMouseDown={() => selectCountry(country)}
+                  role="option"
+                >
+                  <span>{country.name}</span>
+                  <strong>{country.dialCode}</strong>
+                </button>
+              ))}
+              {countryResults.length === 0 ? <p>No country found.</p> : null}
+            </div>
+          ) : null}
+        </label>
+
+        <label>
+          <span>Phone / WhatsApp</span>
+          <input
+            type="tel"
+            name="guestPhoneLocal"
+            placeholder="823 8635 7012"
+            value={phoneNumber}
+            onChange={(event) => updatePhoneNumber(event.target.value)}
+            aria-invalid={Boolean(errors.guestPhone)}
+          />
+        </label>
+        {errors.guestPhone ? <em>{errors.guestPhone}</em> : null}
+      </div>
+
+      {variant === "default" ? (
+        <>
+        <label className="booking-panel__wide">
             <span>Special Request</span>
             <textarea
               name="specialRequest"

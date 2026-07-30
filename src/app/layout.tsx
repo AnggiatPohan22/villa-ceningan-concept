@@ -3,6 +3,7 @@ import "./globals.css";
 import { property } from "@/data/property";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { FloatingPromoAd } from "@/components/layout/FloatingPromoAd";
 import { lodgingStructuredData } from "@/lib/seo/structured-data";
 
 export const metadata: Metadata = {
@@ -46,9 +47,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
         <SiteHeader />
-        {children}
+        <div className="site-main" id="main-content">
+          {children}
+        </div>
         <SiteFooter />
+        <FloatingPromoAd />
         <script
           type="application/ld+json"
           suppressHydrationWarning
