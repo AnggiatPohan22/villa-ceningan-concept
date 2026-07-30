@@ -5,6 +5,12 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
+    "worker:build": "opennextjs-cloudflare build",
+    "worker:deploy": "opennextjs-cloudflare deploy",
+    "worker:upload": "opennextjs-cloudflare upload",
+    "cloudflare:build": "npm run worker:build",
+    "cloudflare:deploy": "npm run worker:deploy",
+    "cloudflare:preview-deploy": "npm run worker:upload",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",

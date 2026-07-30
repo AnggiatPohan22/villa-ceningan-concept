@@ -289,7 +289,23 @@ Deploy langsung dari local CLI:
 npm.cmd run deploy
 ```
 
-Untuk deployment dari GitHub, hubungkan repository ke Cloudflare Workers Builds lalu gunakan branch review seperti `develop`.
+Untuk deployment dari GitHub, hubungkan repository ke Cloudflare Workers Builds dan gunakan setting berikut:
+
+```text
+Production branch: main
+Build command: npm run cloudflare:build
+Deploy command: npm run cloudflare:deploy
+Non-production branch deploy command: npm run cloudflare:preview-deploy
+Root directory: /
+```
+
+Jangan memakai default deploy command `npx wrangler deploy` kecuali build command sudah menjalankan `opennextjs-cloudflare build`. Jika Cloudflare hanya menjalankan `npm run build` lalu `npx wrangler deploy`, deploy akan gagal dengan error `Could not find compiled Open Next config` karena output `.open-next/worker.js` belum dibuat.
+
+Alternatif paling sederhana jika dashboard hanya menyediakan satu deploy command:
+
+```text
+Deploy command: npm run deploy
+```
 
 ## Verification Notes
 
