@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
+    "cf:build": "opennextjs-cloudflare build",
     "worker:build": "opennextjs-cloudflare build",
     "worker:deploy": "opennextjs-cloudflare deploy",
     "worker:upload": "opennextjs-cloudflare upload",

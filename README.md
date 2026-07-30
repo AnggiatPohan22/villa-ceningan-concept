@@ -293,13 +293,13 @@ Untuk deployment dari GitHub, hubungkan repository ke Cloudflare Workers Builds 
 
 ```text
 Production branch: main
-Build command: npm run cloudflare:build
-Deploy command: npm run cloudflare:deploy
-Non-production branch deploy command: npm run cloudflare:preview-deploy
+Build command: npm run cf:build
+Deploy command: npx wrangler deploy
+Non-production branch deploy command: npx wrangler versions upload
 Root directory: /
 ```
 
-Jangan memakai default deploy command `npx wrangler deploy` kecuali build command sudah menjalankan `opennextjs-cloudflare build`. Jika Cloudflare hanya menjalankan `npm run build` lalu `npx wrangler deploy`, deploy akan gagal dengan error `Could not find compiled Open Next config` karena output `.open-next/worker.js` belum dibuat.
+Jangan memakai build command `npm run build` untuk Cloudflare Workers. Command itu hanya membuat output Next.js biasa di `.next`, sedangkan Workers membutuhkan output OpenNext di `.open-next`. Jika Cloudflare hanya menjalankan `npm run build` lalu `npx wrangler deploy`, deploy akan gagal dengan error `Could not find compiled Open Next config` karena output `.open-next/worker.js` belum dibuat.
 
 Alternatif paling sederhana jika dashboard hanya menyediakan satu deploy command:
 
