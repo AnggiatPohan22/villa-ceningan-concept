@@ -1,4 +1,5 @@
 const DEFAULT_REVALIDATE_SECONDS = 60;
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 export type CmsCollectionResponse<T> = {
   docs: T[];
@@ -41,26 +42,47 @@ export function resolveCmsUrl(path: string) {
   return `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+export function warnCms(message: string, detail?: unknown) {
+  if (!isDevelopment) {
+    return;
+  }
+
+  if (detail) {
+    console.warn(`[CMS] ${message}`, detail);
+    return;
+  }
+
+  console.warn(`[CMS] ${message}`);
+}
+
 export async function fetchCms<T>(path: string, revalidate = DEFAULT_REVALIDATE_SECONDS): Promise<T | null> {
   const url = resolveCmsUrl(path);
 
   if (!url) {
+    warnCms(`Falling back to local data because NEXT_PUBLIC_CMS_URL is not set for ${path}.`);
     return null;
   }
 
   try {
     const response = await fetch(url, {
-      next: {
-        revalidate
-      }
+      ...(isDevelopment
+        ? { cache: "no-store" as const }
+        : {
+            next: {
+              revalidate
+            }
+          })
     });
 
     if (!response.ok) {
+      warnCms(`Falling back to local data because ${path} returned ${response.status}.`);
       return null;
     }
 
+    warnCms(`Using CMS data for ${path}.`);
     return (await response.json()) as T;
-  } catch {
+  } catch (error) {
+    warnCms(`Falling back to local data because ${path} could not be fetched.`, error);
     return null;
   }
 }
@@ -74,18 +96,40 @@ export function globalPath(slug: string, depth = 1) {
 }
 
 export function getMediaUrl(media: unknown, fallback: string) {
+  if (typeof media === "string") {
+    if (media.startsWith("http")) {
+      return media;
+    }
+
+    if (media.startsWith("/api/media/file/")) {
+      return resolveCmsUrl(media) || fallback;
+    }
+
+    return media.startsWith("/") ? media : fallback;
+  }
+
   if (!media || typeof media !== "object") {
     return fallback;
   }
 
-  const value = media as CmsMedia;
-  const url = value.sizes?.desktop?.url ?? value.sizes?.card?.url ?? value.url;
+  const value = media as CmsMedia & { filename?: string | null };
+  const url = value.sizes?.desktop?.url ?? value.sizes?.card?.url ?? value.url ?? (value.filename ? `/api/media/file/${value.filename}` : null);
 
   if (!url) {
+    warnCms("Invalid media source from CMS, using local fallback image.");
     return fallback;
   }
 
-  if (url.startsWith("http") || url.startsWith("/")) {
+  if (url.startsWith("http")) {
+    return url;
+  }
+
+  if (url.startsWith("/api/media/file/")) {
+    return resolveCmsUrl(url) || fallback;
+  }
+
+  if (url.startsWith("/")) {
+    warnCms(`CMS media returned a non-media relative URL (${url}), using it as-is.`);
     return url;
   }
 
@@ -125,4 +169,3 @@ export function extractLexicalText(value: unknown, fallback = "") {
 
   return chunks.join(" ").trim() || fallback;
 }
-

@@ -6,10 +6,11 @@ import { HomeJournalPreviewSection } from "@/components/marketing/HomeJournalPre
 import { HomeRoomsShowcaseSection } from "@/components/marketing/HomeRoomsShowcaseSection";
 import { HomeSignatureExperiencesSection } from "@/components/marketing/HomeSignatureExperiencesSection";
 import { HomeTestimonialSection } from "@/components/marketing/HomeTestimonialSection";
-import { getCmsBlogArticles, getCmsRooms, getCmsServices } from "@/lib/cms/content";
+import { getCmsBlogArticles, getCmsHomePage, getCmsRooms, getCmsServices } from "@/lib/cms/content";
 
 export default async function Home() {
-  const [cmsRooms, cmsServices, cmsBlog] = await Promise.all([
+  const [cmsHome, cmsRooms, cmsServices, cmsBlog] = await Promise.all([
+    getCmsHomePage(),
     getCmsRooms(),
     getCmsServices(),
     getCmsBlogArticles()
@@ -17,9 +18,9 @@ export default async function Home() {
 
   return (
     <>
-      <HomeHeroSection />
+      <HomeHeroSection content={cmsHome.hero} />
       <HomeBookingSection />
-      <HomeAboutSection />
+      <HomeAboutSection content={cmsHome.introduction} />
       <HomeSignatureExperiencesSection services={cmsServices} />
       <HomeRoomsShowcaseSection items={cmsRooms} />
       <HomeTestimonialSection />

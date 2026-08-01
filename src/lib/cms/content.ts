@@ -5,10 +5,12 @@ import {
   getMediaAlt,
   getMediaUrl,
   globalPath,
+  warnCms,
   type CmsCollectionResponse
 } from "@/lib/cms/client";
 import { blogArticles, curatorChoices, featuredArticle, type BlogArticle } from "@/data/blog";
 import { gallery as fallbackGallery } from "@/data/gallery";
+import { property } from "@/data/property";
 import { reservationOverview, reservationRoomDetails, reservationSearchItems } from "@/data/reservation";
 import { rooms as fallbackRooms, type RoomItem } from "@/data/rooms";
 import { services as fallbackServices, type ServiceItem } from "@/data/services";
@@ -20,6 +22,29 @@ type CmsArrayLabel = {
 type CmsCta = {
   label?: string | null;
   url?: string | null;
+};
+
+export type HomeHeroContent = {
+  eyebrow: string;
+  heading: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  primaryCTA: {
+    label: string;
+    url: string;
+  };
+  secondaryCTA: {
+    label: string;
+    url: string;
+  };
+};
+
+export type HomeAboutContent = {
+  heading: string;
+  description: string;
+  image: string;
+  imageAlt: string;
 };
 
 type CmsRoom = {
@@ -90,6 +115,24 @@ type CmsBlogArticle = {
 type CmsGalleryItem = {
   image?: unknown;
   alt?: string | null;
+};
+
+type CmsHomePage = {
+  hero?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    backgroundImage?: unknown;
+    primaryCTA?: CmsCta | null;
+    secondaryCTA?: CmsCta | null;
+    active?: boolean | null;
+  } | null;
+  introduction?: {
+    heading?: string | null;
+    description?: string | null;
+    image?: unknown;
+    active?: boolean | null;
+  } | null;
 };
 
 type CmsReservationPage = {
@@ -233,9 +276,79 @@ function mapCmsBlog(article: CmsBlogArticle, fallback: BlogArticle): BlogArticle
   };
 }
 
+function fallbackHomePage() {
+  return {
+    hero: {
+      eyebrow: "Welcome to Sanctuary",
+      heading: property.name,
+      description: "A place to experience and enjoy the life",
+      image: property.heroImage,
+      imageAlt: `${property.name} coastal villa and pool atmosphere at dusk`,
+      primaryCTA: {
+        label: "Explore Rooms",
+        url: "/rooms"
+      },
+      secondaryCTA: {
+        label: "Start Reservation",
+        url: "/reservation"
+      }
+    },
+    introduction: {
+      heading: "A best place to enjoy your life",
+      description:
+        "Set on the calm side of Nusa Ceningan, Villa Ceningan brings together warm island hospitality, quiet interiors, and the simple luxury of waking close to the water.",
+      image: property.aboutImage,
+      imageAlt: `${property.name} private terrace and outdoor bath atmosphere`
+    }
+  };
+}
+
+function mapCmsHomePage(data: CmsHomePage) {
+  const fallback = fallbackHomePage();
+
+  if (!data.hero?.heading) {
+    warnCms("Falling back to local home data because home-page hero.heading is empty.");
+    return fallback;
+  }
+
+  return {
+    hero: {
+      eyebrow: data.hero.eyebrow ?? fallback.hero.eyebrow,
+      heading: data.hero.heading,
+      description: data.hero.description ?? fallback.hero.description,
+      image: getMediaUrl(data.hero.backgroundImage, fallback.hero.image),
+      imageAlt: getMediaAlt(data.hero.backgroundImage, fallback.hero.imageAlt),
+      primaryCTA: {
+        label: data.hero.primaryCTA?.label ?? fallback.hero.primaryCTA.label,
+        url: data.hero.primaryCTA?.url ?? fallback.hero.primaryCTA.url
+      },
+      secondaryCTA: {
+        label: data.hero.secondaryCTA?.label ?? fallback.hero.secondaryCTA.label,
+        url: data.hero.secondaryCTA?.url ?? fallback.hero.secondaryCTA.url
+      }
+    },
+    introduction: {
+      heading: data.introduction?.heading ?? fallback.introduction.heading,
+      description: data.introduction?.description ?? fallback.introduction.description,
+      image: getMediaUrl(data.introduction?.image, fallback.introduction.image),
+      imageAlt: getMediaAlt(data.introduction?.image, fallback.introduction.imageAlt)
+    }
+  };
+}
+
+export async function getCmsHomePage() {
+  const data = await fetchCms<CmsHomePage>(globalPath("home-page", 2), 30);
+
+  if (!data) {
+    return fallbackHomePage();
+  }
+
+  return mapCmsHomePage(data);
+}
+
 export async function getCmsRooms() {
   const data = await fetchCms<CmsCollectionResponse<CmsRoom>>(
-    collectionPath("rooms", "where[status][equals]=published&sort=sortOrder&depth=1"),
+    collectionPath("rooms", "where[status][equals]=published&sort=sortOrder&depth=2"),
     120
   );
 
@@ -248,7 +361,7 @@ export async function getCmsRooms() {
 
 export async function getCmsRoomBySlug(slug: string) {
   const data = await fetchCms<CmsCollectionResponse<CmsRoom>>(
-    collectionPath("rooms", `where[slug][equals]=${encodeURIComponent(slug)}&where[status][equals]=published&depth=1`),
+    collectionPath("rooms", `where[slug][equals]=${encodeURIComponent(slug)}&where[status][equals]=published&depth=2`),
     120
   );
   const fallback = fallbackRooms.find((room) => room.slug === slug);
@@ -262,7 +375,7 @@ export async function getCmsRoomBySlug(slug: string) {
 
 export async function getCmsServices() {
   const data = await fetchCms<CmsCollectionResponse<CmsService>>(
-    collectionPath("services", "where[status][equals]=published&sort=sortOrder&depth=1"),
+    collectionPath("services", "where[status][equals]=published&sort=sortOrder&depth=2"),
     300
   );
 
@@ -275,7 +388,7 @@ export async function getCmsServices() {
 
 export async function getCmsServiceBySlug(slug: string) {
   const data = await fetchCms<CmsCollectionResponse<CmsService>>(
-    collectionPath("services", `where[slug][equals]=${encodeURIComponent(slug)}&where[status][equals]=published&depth=1`),
+    collectionPath("services", `where[slug][equals]=${encodeURIComponent(slug)}&where[status][equals]=published&depth=2`),
     300
   );
   const fallback = fallbackServices.find((service) => service.slug === slug);
@@ -289,7 +402,7 @@ export async function getCmsServiceBySlug(slug: string) {
 
 export async function getCmsBlogArticles() {
   const data = await fetchCms<CmsCollectionResponse<CmsBlogArticle>>(
-    collectionPath("blog", "where[status][equals]=published&sort=sortOrder&depth=1"),
+    collectionPath("blog", "where[status][equals]=published&sort=sortOrder&depth=2"),
     300
   );
 
@@ -314,7 +427,7 @@ export async function getCmsBlogArticles() {
 
 export async function getCmsGallery() {
   const data = await fetchCms<CmsCollectionResponse<CmsGalleryItem>>(
-    collectionPath("gallery", "where[status][equals]=published&sort=sortOrder&depth=1"),
+    collectionPath("gallery", "where[status][equals]=published&sort=sortOrder&depth=2"),
     300
   );
 

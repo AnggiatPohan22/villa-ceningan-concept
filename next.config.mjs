@@ -1,8 +1,18 @@
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
-const cmsImageOrigin = process.env.NEXT_PUBLIC_CMS_URL
-  ? new URL(process.env.NEXT_PUBLIC_CMS_URL)
-  : null;
+function getCmsImageOrigin() {
+  if (!process.env.NEXT_PUBLIC_CMS_URL) {
+    return null;
+  }
+
+  try {
+    return new URL(process.env.NEXT_PUBLIC_CMS_URL);
+  } catch {
+    return null;
+  }
+}
+
+const cmsImageOrigin = getCmsImageOrigin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +22,12 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
+        port: "3000",
+        pathname: "/api/media/file/**",
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
         port: "3000",
         pathname: "/api/media/file/**",
       },
