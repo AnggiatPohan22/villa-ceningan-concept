@@ -66,6 +66,8 @@ http://localhost:3000/api/media/file/**
 http://127.0.0.1:3000/api/media/file/**
 ```
 
+The config also keeps `images.domains` for `localhost` and `127.0.0.1` as a local compatibility fallback. Next.js warns that `images.domains` is deprecated, so `remotePatterns` remains the preferred production rule.
+
 ## Verification
 
 Run from the frontend repo:

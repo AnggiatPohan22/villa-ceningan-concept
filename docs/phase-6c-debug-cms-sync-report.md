@@ -8,6 +8,8 @@ The Home hero did not update from Payload because the frontend Home route was no
 
 Some CMS images could fail or render inconsistently because media URL normalization returned relative Payload media paths as-is. If Payload returns `/api/media/file/...`, the browser resolves it against the frontend origin on port `3001` instead of the CMS origin on port `3000`.
 
+Follow-up audit found an additional CMS-side issue: Payload media documents returned URLs like `http://localhost:3000/api/media/file/island-suite.webp`, but those file URLs returned `404` until an explicit CMS media file route was added in the Payload repo.
+
 ## Endpoint Checked
 
 - `GET http://localhost:3000/api/globals/home-page?depth=2`
@@ -56,6 +58,7 @@ Some generated image size URLs can be `null`, so the frontend must fall back to 
 - Media objects with only `filename` can now resolve to `/api/media/file/{filename}` through the CMS origin.
 - Collection queries for rooms, services, gallery, and blog now use `depth=2` so nested media relations are available.
 - `next.config.mjs` now includes explicit local CMS image patterns for `localhost:3000` and `127.0.0.1:3000`.
+- `next.config.mjs` also includes `images.domains` for local CMS hosts as a compatibility fallback for the current local Next/OpenNext dev runtime.
 - Invalid `NEXT_PUBLIC_CMS_URL` no longer crashes Next config parsing.
 
 ## Fixes Done
@@ -83,6 +86,7 @@ Results:
 - Home HTML contained CMS heading `Villa Ceningan by Giattech`.
 - Home HTML no longer contained the fallback-only `<h1 id="home-hero-title">Villa Ceningan</h1>`.
 - `/`, `/rooms`, `/services`, and `/gallery` all returned HTML with CMS media URLs and Next image optimizer output.
+- Follow-up CMS media `HEAD` checks returned `200 image/webp` after the CMS media file route fix.
 
 ## Manual Smoke Test Instructions
 
@@ -139,4 +143,4 @@ NEXT_PUBLIC_CMS_URL=http://localhost:3000
 
 - Header/footer/site-settings are still documented as integrated scope, but this task only fixed Home sync and media rendering paths that were failing.
 - Manual browser inspection is still recommended after changing the CMS hero heading to the exact test string.
-- `next-env.d.ts` had an existing local modification before this task and is not included in this commit.
+- Because `images.domains` is deprecated, keep `remotePatterns` as the preferred production rule and remove `domains` later only after the local optimizer accepts the remote pattern reliably.
