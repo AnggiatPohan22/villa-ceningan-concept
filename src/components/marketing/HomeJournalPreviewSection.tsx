@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { blogArticles } from "@/data/blog";
+import { blogArticles, type BlogArticle } from "@/data/blog";
 
-export function HomeJournalPreviewSection() {
+type HomeJournalPreviewSectionProps = {
+  articles?: BlogArticle[];
+};
+
+export function HomeJournalPreviewSection({ articles = blogArticles }: HomeJournalPreviewSectionProps = {}) {
   return (
     <section className="home2-journal" aria-labelledby="home-journal-title">
       <div className="home2-section-heading">
@@ -13,7 +17,7 @@ export function HomeJournalPreviewSection() {
         </Link>
       </div>
       <div className="home2-journal__grid">
-        {blogArticles.slice(0, 3).map((article) => (
+        {articles.slice(0, 3).map((article) => (
           <article className="home2-journal-card" key={article.slug}>
             <Link href="/blog" className="home2-journal-card__media">
               <Image src={article.image} alt={article.excerpt} fill sizes="(min-width: 900px) 30vw, 100vw" />

@@ -1,13 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { blogArticles, blogCategories, curatorChoices, featuredArticle } from "@/data/blog";
+import { blogArticles, blogCategories, curatorChoices, featuredArticle, type BlogArticle } from "@/data/blog";
 import { getWhatsappUrl } from "@/data/property";
 
-export function BlogHeroSection() {
+type BlogSectionsProps = {
+  articles?: BlogArticle[];
+  featured?: BlogArticle;
+  curated?: BlogArticle[];
+};
+
+export function BlogHeroSection({ featured = featuredArticle }: BlogSectionsProps = {}) {
   return (
     <section className="blog-hero" aria-labelledby="blog-hero-title">
       <Image
-        src={featuredArticle.image}
+        src={featured.image}
         alt="Quiet Villa Ceningan landscape at sunrise"
         fill
         priority
@@ -16,9 +22,9 @@ export function BlogHeroSection() {
       />
       <div className="blog-hero__overlay" />
       <div className="blog-hero__content">
-        <p className="blog-pill">{featuredArticle.category}</p>
-        <h1 id="blog-hero-title">{featuredArticle.title}</h1>
-        <p>{featuredArticle.excerpt}</p>
+        <p className="blog-pill">{featured.category}</p>
+        <h1 id="blog-hero-title">{featured.title}</h1>
+        <p>{featured.excerpt}</p>
         <Link className="blog-text-link blog-text-link--light" href="#featured-story">
           Read the Article <span aria-hidden="true">-&gt;</span>
         </Link>
@@ -46,8 +52,8 @@ export function BlogToolbar() {
   );
 }
 
-export function BlogJournalSection() {
-  const [leadArticle, ...secondaryArticles] = blogArticles;
+export function BlogJournalSection({ articles = blogArticles, curated = curatorChoices }: BlogSectionsProps = {}) {
+  const [leadArticle, ...secondaryArticles] = articles;
 
   return (
     <section className="blog-journal" id="featured-story" aria-labelledby="blog-journal-title">
@@ -89,7 +95,7 @@ export function BlogJournalSection() {
         <section className="curator-box" aria-labelledby="curator-title">
           <h2 id="curator-title">The Curator&apos;s Choice</h2>
           <div>
-            {curatorChoices.map((choice) => (
+            {curated.map((choice) => (
               <article className="curator-item" key={choice.slug}>
                 <Image src={choice.image} alt={choice.title} width={112} height={84} />
                 <div>

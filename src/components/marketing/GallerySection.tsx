@@ -2,7 +2,11 @@ import Image from "next/image";
 import { gallery } from "@/data/gallery";
 import { property } from "@/data/property";
 
-export function GallerySection() {
+type GallerySectionProps = {
+  images?: string[];
+};
+
+export function GallerySection({ images = gallery }: GallerySectionProps = {}) {
   return (
     <section className="section" id="gallery">
       <div className="section-heading">
@@ -10,7 +14,7 @@ export function GallerySection() {
         <h2>Visual proof for the stay experience.</h2>
       </div>
       <div className="gallery-grid">
-        {gallery.map((image, index) => (
+        {images.map((image, index) => (
           <Image
             key={image}
             src={image}

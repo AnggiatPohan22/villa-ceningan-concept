@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { GallerySection } from "@/components/marketing/GallerySection";
 import { property } from "@/data/property";
+import { getCmsGallery } from "@/lib/cms/content";
 
 export const metadata: Metadata = {
   title: "Gallery",
   description: `Browse visual references for ${property.name}.`
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const cmsGallery = await getCmsGallery();
+
   return (
     <main className="page-shell">
       <section className="page-hero">
@@ -18,7 +21,7 @@ export default function GalleryPage() {
           bisa dipisah menjadi room, pool, dining, destination, dan guest experience.
         </p>
       </section>
-      <GallerySection />
+      <GallerySection images={cmsGallery} />
     </main>
   );
 }

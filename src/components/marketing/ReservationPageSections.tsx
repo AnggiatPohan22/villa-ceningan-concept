@@ -4,13 +4,26 @@ import { BookingInquiryPanel } from "@/components/booking/BookingInquiryPanel";
 import { ReservationAvailabilitySearch } from "@/components/marketing/ReservationAvailabilitySearch";
 import { property } from "@/data/property";
 import { reservationOverview, reservationRoomDetails } from "@/data/reservation";
-import { rooms } from "@/data/rooms";
+import { rooms, type RoomItem } from "@/data/rooms";
 
-function getRoomDetail(slug: string) {
-  return reservationRoomDetails[slug as keyof typeof reservationRoomDetails];
+type ReservationRoomDetails = typeof reservationRoomDetails;
+type ReservationOverview = typeof reservationOverview;
+
+type ReservationPageSectionsProps = {
+  items?: RoomItem[];
+  roomDetails?: ReservationRoomDetails;
+  overview?: ReservationOverview;
+};
+
+function getRoomDetail(details: ReservationRoomDetails, slug: string) {
+  return details[slug as keyof ReservationRoomDetails];
 }
 
-export function ReservationPageSections() {
+export function ReservationPageSections({
+  items = rooms,
+  roomDetails = reservationRoomDetails,
+  overview = reservationOverview
+}: ReservationPageSectionsProps = {}) {
   return (
     <main className="reservation-page">
       <section className="reservation-hero" aria-labelledby="reservation-title">
@@ -27,8 +40,8 @@ export function ReservationPageSections() {
       <section className="reservation-rooms" id="reservation-rooms" aria-labelledby="reservation-rooms-title">
         <h2 id="reservation-rooms-title">Rooms available for you</h2>
         <div className="reservation-room-list">
-          {rooms.map((room) => {
-            const detail = getRoomDetail(room.slug);
+          {items.map((room) => {
+            const detail = getRoomDetail(roomDetails, room.slug);
 
             return (
               <article className="reservation-room-card" key={room.slug}>
@@ -83,15 +96,15 @@ export function ReservationPageSections() {
         <div className="reservation-overview__panel">
           <div className="reservation-overview__dates">
             <p>
-              Arrival date: <strong>{reservationOverview.arrival}</strong>
+              Arrival date: <strong>{overview.arrival}</strong>
             </p>
             <p>
-              Departure date: <strong>{reservationOverview.departure}</strong>
+              Departure date: <strong>{overview.departure}</strong>
             </p>
           </div>
           <div className="reservation-overview__items">
-            {reservationOverview.items.map((item) => {
-              const room = rooms.find((entry) => entry.slug === item.slug);
+            {overview.items.map((item) => {
+              const room = items.find((entry) => entry.slug === item.slug);
 
               if (!room) {
                 return null;
@@ -103,7 +116,7 @@ export function ReservationPageSections() {
                   <div>
                     <h3>{room.name}</h3>
                     <p>
-                      Includes Breakfast <span>Deposit: {getRoomDetail(room.slug)?.deposit}</span>
+                      Includes Breakfast <span>Deposit: {getRoomDetail(roomDetails, room.slug)?.deposit}</span>
                       <span>Rooms: {item.roomCount}</span>
                       <span>Passenger: {item.passenger}</span>
                     </p>
@@ -121,7 +134,7 @@ export function ReservationPageSections() {
             </label>
             <div>
               <span>Total Price</span>
-              <strong>{reservationOverview.total}</strong>
+              <strong>{overview.total}</strong>
             </div>
             <p> This Function can work if you have Payment Gateway or Booking Engine. Please contact us for more information.</p>
           </div>

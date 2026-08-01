@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/shared/Button";
-import { rooms } from "@/data/rooms";
+import { rooms, type RoomItem } from "@/data/rooms";
 import { getWhatsappUrl } from "@/data/property";
 
 const filters = [
@@ -14,14 +14,18 @@ const filters = [
   { label: "Family", value: "family" }
 ];
 
-export function RoomsSection() {
+type RoomsSectionProps = {
+  items?: RoomItem[];
+};
+
+export function RoomsSection({ items = rooms }: RoomsSectionProps = {}) {
   const [activeFilter, setActiveFilter] = useState("all");
   const filteredRooms = useMemo(
     () =>
       activeFilter === "all"
-        ? rooms
-        : rooms.filter((room) => room.category.toLowerCase().includes(activeFilter)),
-    [activeFilter]
+        ? items
+        : items.filter((room) => room.category.toLowerCase().includes(activeFilter)),
+    [activeFilter, items]
   );
 
   return (

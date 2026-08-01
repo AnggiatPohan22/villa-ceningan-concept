@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/shared/Button";
 import { getWhatsappUrl, property } from "@/data/property";
-import { services } from "@/data/services";
+import { services, type ServiceItem } from "@/data/services";
 
 export function ServicesHeroSection() {
   return (
@@ -27,7 +27,11 @@ export function ServicesHeroSection() {
   );
 }
 
-export function SignatureServicesSection() {
+type ServicesSectionsProps = {
+  items?: ServiceItem[];
+};
+
+export function SignatureServicesSection({ items = services }: ServicesSectionsProps = {}) {
   return (
     <>
       <section className="services3-intro" id="services3-intro" aria-labelledby="services3-intro-title">
@@ -38,7 +42,7 @@ export function SignatureServicesSection() {
       </section>
 
       <section className="services3-list" aria-label="Signature services">
-        {services.filter((service) => service.slug !== "seamless-transit").map((service, index) => (
+        {items.filter((service) => service.slug !== "seamless-transit").map((service, index) => (
           <article className="services3-row" key={service.slug}>
             <Link className="services3-row__media" href={`/services/${service.slug}`}>
               <Image
@@ -63,8 +67,8 @@ export function SignatureServicesSection() {
   );
 }
 
-export function TailoredMomentsSection() {
-  const transit = services.find((service) => service.slug === "seamless-transit") ?? services[0];
+export function TailoredMomentsSection({ items = services }: ServicesSectionsProps = {}) {
+  const transit = items.find((service) => service.slug === "seamless-transit") ?? items[0];
 
   return (
     <section className="services3-transit" aria-labelledby="services3-transit-title">

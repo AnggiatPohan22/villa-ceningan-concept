@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { rooms } from "@/data/rooms";
+import { rooms, type RoomItem } from "@/data/rooms";
 
-export function HomeRoomsShowcaseSection() {
-  const featuredRoom = rooms[1] ?? rooms[0];
+type HomeRoomsShowcaseSectionProps = {
+  items?: RoomItem[];
+};
+
+export function HomeRoomsShowcaseSection({ items = rooms }: HomeRoomsShowcaseSectionProps = {}) {
+  const featuredRoom = items[1] ?? items[0];
 
   return (
     <section className="home2-rooms" aria-labelledby="home-rooms-title">
@@ -11,7 +15,7 @@ export function HomeRoomsShowcaseSection() {
         <p className="eyebrow">Discover our rooms</p>
         <h2 id="home-rooms-title">Luxury interior</h2>
         <div className="home2-rooms__list">
-          {rooms.map((room) => (
+          {items.map((room) => (
             <Link className="home2-room-row" href={`/rooms/${room.slug}`} key={room.slug}>
               <span className="home2-room-row__thumb">
                 <Image src={room.image} alt={`${room.name} interior preview`} fill sizes="112px" />

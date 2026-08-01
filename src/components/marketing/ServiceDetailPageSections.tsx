@@ -3,20 +3,20 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/shared/Button";
 import { getWhatsappUrl, property } from "@/data/property";
-import { getServiceBySlug, services } from "@/data/services";
+import { services, type ServiceItem } from "@/data/services";
 
 type ServiceDetailPageSectionsProps = {
-  slug: string;
+  service: ServiceItem | null;
+  relatedServices?: ServiceItem[];
 };
 
-export function ServiceDetailPageSections({ slug }: ServiceDetailPageSectionsProps) {
-  const service = getServiceBySlug(slug);
-
+export function ServiceDetailPageSections({
+  service,
+  relatedServices = services.filter((item) => item.slug !== service?.slug).slice(0, 3)
+}: ServiceDetailPageSectionsProps) {
   if (!service) {
     notFound();
   }
-
-  const relatedServices = services.filter((item) => item.slug !== service.slug).slice(0, 3);
 
   return (
     <main className="service-detail-page">

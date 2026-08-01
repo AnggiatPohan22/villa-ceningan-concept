@@ -1,8 +1,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import { homeSignatureExperiences } from "@/data/home";
+import type { ServiceItem } from "@/data/services";
 
-export function HomeSignatureExperiencesSection() {
+type HomeSignatureExperience = {
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+};
+
+type HomeSignatureExperiencesSectionProps = {
+  services?: ServiceItem[];
+};
+
+function mapServiceExperiences(services: ServiceItem[]): HomeSignatureExperience[] {
+  return services.slice(0, 4).map((service) => ({
+    title: service.title,
+    description: service.summary,
+    image: service.image,
+    category: service.eyebrow
+  }));
+}
+
+export function HomeSignatureExperiencesSection({ services }: HomeSignatureExperiencesSectionProps = {}) {
+  const experiences = services?.length ? mapServiceExperiences(services) : homeSignatureExperiences;
+
   return (
     <section className="home2-experiences" aria-labelledby="home-experiences-title">
       <div className="home2-experiences__header">
@@ -16,7 +39,7 @@ export function HomeSignatureExperiencesSection() {
         </div>
       </div>
       <div className="home2-experiences__rail">
-        {homeSignatureExperiences.map((experience) => (
+        {experiences.map((experience) => (
           <article className="home2-experience-card" key={experience.title}>
             <div className="home2-experience-card__media">
               <Image

@@ -3,20 +3,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/shared/Button";
 import { getWhatsappUrl, property } from "@/data/property";
-import { getRoomBySlug, rooms } from "@/data/rooms";
+import { rooms, type RoomItem } from "@/data/rooms";
 
 type RoomDetailPageSectionsProps = {
-  slug: string;
+  room: RoomItem | null;
+  relatedRooms?: RoomItem[];
 };
 
-export function RoomDetailPageSections({ slug }: RoomDetailPageSectionsProps) {
-  const room = getRoomBySlug(slug);
-
+export function RoomDetailPageSections({ room, relatedRooms = rooms.filter((item) => item.slug !== room?.slug).slice(0, 2) }: RoomDetailPageSectionsProps) {
   if (!room) {
     notFound();
   }
-
-  const relatedRooms = rooms.filter((item) => item.slug !== room.slug).slice(0, 2);
 
   return (
     <main className="room3-page">

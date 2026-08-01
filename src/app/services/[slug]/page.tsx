@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { ServiceDetailPageSections } from "@/components/marketing/ServiceDetailPageSections";
-import { getServiceBySlug, services } from "@/data/services";
+import { services } from "@/data/services";
 import { property } from "@/data/property";
+import { getCmsServiceBySlug, getCmsServices } from "@/lib/cms/content";
 
 type ServiceDetailPageProps = {
   params: Promise<{
@@ -17,7 +18,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await getCmsServiceBySlug(slug);
 
   if (!service) {
     return {
@@ -33,6 +34,7 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
   const { slug } = await params;
+  const [service, cmsServices] = await Promise.all([getCmsServiceBySlug(slug), getCmsServices()]);
 
-  return <ServiceDetailPageSections slug={slug} />;
+  return <ServiceDetailPageSections service={service} relatedServices={cmsServices.filter((item) => item.slug !== slug).slice(0, 3)} />;
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AvailabilityBar } from "@/components/shared/AvailabilityBar";
 import { Button } from "@/components/shared/Button";
 import { property } from "@/data/property";
-import { rooms } from "@/data/rooms";
+import { rooms, type RoomItem } from "@/data/rooms";
 
 export function RoomsHeroSection() {
   return (
@@ -25,7 +25,11 @@ export function RoomsHeroSection() {
   );
 }
 
-export function RoomsCollectionSection() {
+type RoomsPageSectionsProps = {
+  items?: RoomItem[];
+};
+
+export function RoomsCollectionSection({ items = rooms }: RoomsPageSectionsProps = {}) {
   return (
     <section className="rooms3-collection" aria-labelledby="rooms3-collection-title">
       <div className="rooms3-collection__intro">
@@ -33,7 +37,7 @@ export function RoomsCollectionSection() {
         <h2 id="rooms3-collection-title">Stay where island calm meets personal villa comfort.</h2>
       </div>
       <div className="rooms3-list">
-        {rooms.map((room, index) => (
+        {items.map((room, index) => (
           <article className="rooms3-card" key={room.slug}>
             <div className="rooms3-card__copy">
               <span className="rooms3-card__number">{String(index + 1).padStart(2, "0")}</span>
@@ -90,14 +94,14 @@ export function RoomsCollectionSection() {
   );
 }
 
-export function RoomsPageSections() {
+export function RoomsPageSections({ items = rooms }: RoomsPageSectionsProps = {}) {
   return (
     <>
       <RoomsHeroSection />
       <div className="rooms3-availability-shell">
         <AvailabilityBar className="rooms3-availability" />
       </div>
-      <RoomsCollectionSection />
+      <RoomsCollectionSection items={items} />
     </>
   );
 }

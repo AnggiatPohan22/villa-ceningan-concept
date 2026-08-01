@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { RoomsSection } from "@/components/marketing/RoomsSection";
 import { property } from "@/data/property";
+import { getCmsRooms } from "@/lib/cms/content";
 
 export const metadata: Metadata = {
   title: "Villa and Rooms",
   description: `Explore villa and room types at ${property.name}.`
 };
 
-export default function VillaPage() {
+export default async function VillaPage() {
+  const cmsRooms = await getCmsRooms();
+
   return (
     <main className="page-shell">
       <section className="page-hero">
@@ -18,7 +21,7 @@ export default function VillaPage() {
           lengkap dengan harga awal, kapasitas, dan detail stay untuk calon tamu.
         </p>
       </section>
-      <RoomsSection />
+      <RoomsSection items={cmsRooms} />
     </main>
   );
 }

@@ -15,9 +15,9 @@ Villa Ceningan Website adalah starter website hospitality untuk villa, boutique 
 - **Navigation:** `next/link`
 - **SEO:** Metadata API dan structured data JSON-LD
 - **Booking flow:** WhatsApp-first inquiry
-- **Data layer:** static TypeScript data di `src/data/`
+- **Data layer:** optional Payload CMS REST data melalui `NEXT_PUBLIC_CMS_URL`, dengan static TypeScript fallback di `src/data/`
 
-Project ini tidak memakai Tailwind, Bootstrap, CMS, database, atau payment gateway pada versi starter ini.
+Project ini tidak memakai Tailwind, Bootstrap, database lokal frontend, atau payment gateway pada versi starter ini. Integrasi CMS bersifat headless melalui Payload REST API dari project CMS terpisah.
 
 ## Fungsi Utama
 

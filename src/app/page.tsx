@@ -6,17 +6,24 @@ import { HomeJournalPreviewSection } from "@/components/marketing/HomeJournalPre
 import { HomeRoomsShowcaseSection } from "@/components/marketing/HomeRoomsShowcaseSection";
 import { HomeSignatureExperiencesSection } from "@/components/marketing/HomeSignatureExperiencesSection";
 import { HomeTestimonialSection } from "@/components/marketing/HomeTestimonialSection";
+import { getCmsBlogArticles, getCmsRooms, getCmsServices } from "@/lib/cms/content";
 
-export default function Home() {
+export default async function Home() {
+  const [cmsRooms, cmsServices, cmsBlog] = await Promise.all([
+    getCmsRooms(),
+    getCmsServices(),
+    getCmsBlogArticles()
+  ]);
+
   return (
     <>
       <HomeHeroSection />
       <HomeBookingSection />
       <HomeAboutSection />
-      <HomeSignatureExperiencesSection />
-      <HomeRoomsShowcaseSection />
+      <HomeSignatureExperiencesSection services={cmsServices} />
+      <HomeRoomsShowcaseSection items={cmsRooms} />
       <HomeTestimonialSection />
-      <HomeJournalPreviewSection />
+      <HomeJournalPreviewSection articles={cmsBlog.blogArticles} />
       <HomeContactPreviewSection />
     </>
   );
