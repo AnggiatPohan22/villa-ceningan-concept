@@ -109,7 +109,7 @@ export function SiteFooter() {
       </div>
       <div className="footer__meta">
         <div className="footer__meta-inner">
-          <span>Copyright &copy; 2026 {property.name}. All rights reserved.</span>
+          <span>Copyright &copy; 2026 {property.name}. Manage by Giattech.</span>
           <nav aria-label="Footer policy links">
             <Link href="/terms">Terms</Link>
             <Link href="/privacy">Privacy</Link>
