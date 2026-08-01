@@ -13,11 +13,12 @@ function getCmsImageOrigin() {
 }
 
 const cmsImageOrigin = getCmsImageOrigin();
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["localhost", "127.0.0.1"],
+    dangerouslyAllowLocalIP: isDevelopment,
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
