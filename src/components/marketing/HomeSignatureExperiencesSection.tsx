@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { homeSignatureExperiences } from "@/data/home";
 import type { ServiceItem } from "@/data/services";
+import type { HomeSectionContent } from "@/lib/cms/content";
 
 type HomeSignatureExperience = {
   title: string;
@@ -12,6 +13,7 @@ type HomeSignatureExperience = {
 
 type HomeSignatureExperiencesSectionProps = {
   services?: ServiceItem[];
+  content?: HomeSectionContent;
 };
 
 function mapServiceExperiences(services: ServiceItem[]): HomeSignatureExperience[] {
@@ -23,15 +25,15 @@ function mapServiceExperiences(services: ServiceItem[]): HomeSignatureExperience
   }));
 }
 
-export function HomeSignatureExperiencesSection({ services }: HomeSignatureExperiencesSectionProps = {}) {
+export function HomeSignatureExperiencesSection({ services, content }: HomeSignatureExperiencesSectionProps = {}) {
   const experiences = services?.length ? mapServiceExperiences(services) : homeSignatureExperiences;
 
   return (
     <section className="home2-experiences" aria-labelledby="home-experiences-title">
       <div className="home2-experiences__header">
         <div>
-          <p className="eyebrow">Curated Moments</p>
-          <h2 id="home-experiences-title">Signature Experiences</h2>
+          <p className="eyebrow">{content?.eyebrow ?? "Curated Moments"}</p>
+          <h2 id="home-experiences-title">{content?.heading ?? "Signature Experiences"}</h2>
         </div>
         <div className="home2-experiences__arrows" aria-hidden="true">
           <span />
@@ -56,8 +58,8 @@ export function HomeSignatureExperiencesSection({ services }: HomeSignatureExper
         ))}
       </div>
       <div className="home2-section-cta">
-        <Link className="ui-button ui-button--outline ui-button--md" href="/services">
-          All Signature Service
+        <Link className="ui-button ui-button--outline ui-button--md" href={content?.cta?.url ?? "/services"}>
+          {content?.cta?.label ?? "All Signature Service"}
         </Link>
       </div>
     </section>

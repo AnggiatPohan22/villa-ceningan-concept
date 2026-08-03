@@ -2,14 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { property } from "@/data/property";
 import { gallery } from "@/data/gallery";
-
-const exploreLinks = [
-  { href: "/about-us", label: "About Us" },
-  { href: "/contact", label: "Contact" },
-  { href: "/services", label: "Services" },
-  { href: "/blog", label: "Blog" },
-  { href: "/reservation", label: "Reservation" }
-];
+import { getCmsFooter } from "@/lib/cms/content";
 
 type FooterIconName = "instagram" | "mail" | "map" | "phone" | "share" | "whatsapp";
 
@@ -36,37 +29,83 @@ function FooterIcon({ name }: { name: FooterIconName }) {
   );
 }
 
-export function SiteFooter() {
+function isInternalLink(url: string) {
+  return url.startsWith("/");
+}
+
+function FooterTextLink({
+  label,
+  openInNewTab,
+  url
+}: {
+  label: string;
+  openInNewTab?: boolean;
+  url: string;
+}) {
+  if (isInternalLink(url)) {
+    return <Link href={url}>{label}</Link>;
+  }
+
+  return (
+    <a href={url} target={openInNewTab ? "_blank" : undefined} rel={openInNewTab ? "noreferrer" : undefined}>
+      {label}
+    </a>
+  );
+}
+
+function iconForPlatform(platform: string): FooterIconName {
+  if (platform === "instagram") {
+    return "instagram";
+  }
+
+  if (platform === "whatsapp") {
+    return "whatsapp";
+  }
+
+  if (platform === "email") {
+    return "mail";
+  }
+
+  return "share";
+}
+
+export async function SiteFooter() {
+  const footer = await getCmsFooter();
+
   return (
     <footer className="footer" id="contact">
       <div className="footer__inner">
         <div className="footer__brand">
-          <h2>{property.name}</h2>
-          <p>
-            Redefining island luxury through the lens of nature and tranquility.
-            A sanctuary for the modern soul seeking peace without compromising on elegance.
-          </p>
+          <h2>{footer.brand.name}</h2>
+          <p>{footer.brand.description}</p>
           <div className="footer__socials" aria-label="Social links">
-            <a href="/contact" aria-label="Follow Villa Ceningan on Instagram">
-              <FooterIcon name="instagram" />
-            </a>
-            <a href={`https://wa.me/${property.whatsapp}`} aria-label="Chat with Villa Ceningan on WhatsApp">
-              <FooterIcon name="whatsapp" />
-            </a>
-            <a href="/contact" aria-label="Share Villa Ceningan">
-              <FooterIcon name="share" />
-            </a>
+            {footer.socialLinks.map((link) => (
+              <a
+                href={link.url}
+                aria-label={link.label}
+                key={`${link.platform}-${link.url}`}
+                target={link.openInNewTab ? "_blank" : undefined}
+                rel={link.openInNewTab ? "noreferrer" : undefined}
+              >
+                <FooterIcon name={iconForPlatform(link.platform)} />
+              </a>
+            ))}
           </div>
         </div>
 
-        <nav className="footer__column footer__explore" aria-label="Explore links">
-          <h3>Explore</h3>
-          {exploreLinks.map((link) => (
-            <Link href={link.href} key={link.label}>
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        {footer.navigationColumns.slice(0, 1).map((column) => (
+          <nav className="footer__column footer__explore" aria-label={`${column.title} links`} key={column.title}>
+            <h3>{column.title}</h3>
+            {column.links.map((link) => (
+              <FooterTextLink
+                key={`${column.title}-${link.label}-${link.url}`}
+                label={link.label}
+                openInNewTab={link.openInNewTab}
+                url={link.url}
+              />
+            ))}
+          </nav>
+        ))}
 
         <div className="footer__column footer__concierge">
           <h3>Concierge</h3>
@@ -75,19 +114,19 @@ export function SiteFooter() {
               <span aria-hidden="true">
                 <FooterIcon name="map" />
               </span>
-              {property.address}
+              {footer.contact.address}
             </a>
-            <a href={`tel:${property.phone}`}>
+            <a href={`tel:${footer.contact.phone}`}>
               <span aria-hidden="true">
                 <FooterIcon name="phone" />
               </span>
-              {property.phone}
+              {footer.contact.phone}
             </a>
-            <a href={`mailto:${property.email}`}>
+            <a href={`mailto:${footer.contact.email}`}>
               <span aria-hidden="true">
                 <FooterIcon name="mail" />
               </span>
-              {property.email}
+              {footer.contact.email}
             </a>
           </address>
         </div>
@@ -109,11 +148,16 @@ export function SiteFooter() {
       </div>
       <div className="footer__meta">
         <div className="footer__meta-inner">
-          <span>Copyright &copy; 2026 {property.name}. Manage by Giattech.</span>
+          <span>{footer.copyrightText}</span>
           <nav aria-label="Footer policy links">
-            <Link href="/terms">Terms</Link>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/cookies">Cookies</Link>
+            {footer.legalLinks.map((link) => (
+              <FooterTextLink
+                key={`${link.label}-${link.url}`}
+                label={link.label}
+                openInNewTab={link.openInNewTab}
+                url={link.url}
+              />
+            ))}
           </nav>
         </div>
       </div>

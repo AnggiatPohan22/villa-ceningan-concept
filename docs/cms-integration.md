@@ -14,6 +14,7 @@ The frontend can now read public Payload CMS content while keeping static TypeSc
 - Added CMS media URL normalization for `next/image`.
 - Added optional CMS image host support in `next.config.mjs` through `NEXT_PUBLIC_CMS_URL`.
 - Added Home Page Global mapping for hero and introduction content.
+- Added Phase 7.6 mapping for Header, Site Settings, About Page, Rooms Page, Services Page, Blog Page, Reservation Page, Contact Page, Legal Pages, and page SEO metadata.
 - Connected CMS data to:
   - `/`
   - `/villa`
@@ -24,6 +25,9 @@ The frontend can now read public Payload CMS content while keeping static TypeSc
   - `/gallery`
   - `/reservation`
   - `/blog`
+  - `/terms`
+  - `/privacy`
+  - `/cookies`
 - Kept static data in `src/data/` as fallback when CMS is missing, unreachable, or empty.
 
 ## Required Environment
@@ -39,6 +43,7 @@ If this variable is missing, the frontend uses static fallback data and still bu
 - Development CMS fetches use `cache: "no-store"` so saved CMS edits are visible after refresh.
 - Production CMS fetches keep `next.revalidate`.
 - CMS data is preferred when the response is reachable and has the required minimum fields.
+- Globals with Payload draft status are used only when `_status` is `published`; draft Globals intentionally fall back to local data.
 - Static data in `src/data/*` is used only when CMS is missing, unreachable, empty, or invalid.
 - Development warnings prefixed with `[CMS]` explain whether CMS data or fallback data is being used.
 
@@ -84,6 +89,21 @@ npm.cmd run lint
 ```
 
 The lint script currently fails because `next lint` is no longer valid with this Next.js/ESLint setup. Running `npx.cmd eslint .` also requires an `eslint.config.*` migration. This is an existing tooling follow-up, not a CMS integration runtime failure.
+
+## Phase 7.6 Notes
+
+Audit and implementation details are documented in:
+
+```text
+docs/phase-7-6-full-cms-sync-audit.md
+docs/phase-7-6-full-cms-sync-report.md
+```
+
+Known remaining CMS coverage gaps before deployment planning:
+
+- `/gallery` has CMS collection images but no page-level `gallery-page` Global for hero/SEO content.
+- `/blog/[slug]` does not exist yet in the frontend route tree.
+- Home testimonial/contact preview still require either a CMS schema follow-up or acceptance as fallback content.
 
 ## Next Safe Step
 

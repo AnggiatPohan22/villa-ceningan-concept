@@ -2,13 +2,18 @@ import Image from "next/image";
 import { Button } from "@/components/shared/Button";
 import { aboutPrinciples, aboutTeam } from "@/data/about";
 import { getWhatsappUrl, property } from "@/data/property";
+import type { CmsAboutPageContent } from "@/lib/cms/content";
 
-export function AboutHeroSection() {
+type AboutPageProps = {
+  page?: CmsAboutPageContent;
+};
+
+export function AboutHeroSection({ page }: AboutPageProps = {}) {
   return (
     <section className="about-hero" aria-labelledby="about-hero-title">
       <Image
-        src="/assets/img/hero-bg-2.webp"
-        alt={`${property.name} surrounded by quiet island greenery`}
+        src={page?.hero.image ?? "/assets/img/hero-bg-2.webp"}
+        alt={page?.hero.imageAlt ?? `${property.name} surrounded by quiet island greenery`}
         fill
         priority
         sizes="100vw"
@@ -16,12 +21,9 @@ export function AboutHeroSection() {
       />
       <div className="about-hero__overlay" />
       <div className="about-hero__content">
-        <p className="eyebrow">Est. island mornings</p>
-        <h1 id="about-hero-title">The Philosophy of Stillness</h1>
-        <p>
-          At {property.name}, comfort is found in slower moments: the pool before breakfast,
-          the hush after a day on the water, and the ease of being cared for without ceremony.
-        </p>
+        <p className="eyebrow">{page?.hero.eyebrow ?? "Est. island mornings"}</p>
+        <h1 id="about-hero-title">{page?.hero.heading ?? "The Philosophy of Stillness"}</h1>
+        <p>{page?.hero.description}</p>
       </div>
       <a className="about-hero__cue" href="#about-story" aria-label="Scroll to our story">
         <span />
@@ -30,35 +32,33 @@ export function AboutHeroSection() {
   );
 }
 
-export function AboutStorySection() {
+export function AboutStorySection({ page }: AboutPageProps = {}) {
+  const paragraphs = page?.story.paragraphs?.length ? page.story.paragraphs : [];
+
   return (
     <section className="about-story" id="about-story" aria-labelledby="about-story-title">
       <div className="about-story__copy">
-        <p className="eyebrow">{property.location}</p>
-        <h2 id="about-story-title">Our Story</h2>
-        <p>
-          Villa Ceningan was shaped as a softer kind of island stay: intimate enough to
-          feel personal, refined enough to feel special, and practical enough for guests
-          who want the details handled clearly.
-        </p>
-        <p>
-          The villa experience follows the island rhythm rather than fighting it. Morning
-          light, poolside pauses, warm rooms, and direct WhatsApp support create a stay
-          that is calm, responsive, and easy to trust.
-        </p>
-        <p>
-          Every room, pathway, and arrival detail is designed to help guests move from
-          travel mode into retreat mode.
-        </p>
+        <p className="eyebrow">{page?.story.eyebrow ?? property.location}</p>
+        <h2 id="about-story-title">{page?.story.heading ?? "Our Story"}</h2>
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
       </div>
       <div className="about-story__media">
-        <Image src={property.aboutImage} alt={`${property.name} interior story and villa atmosphere`} width={760} height={940} />
+        <Image
+          src={page?.story.image ?? property.aboutImage}
+          alt={page?.story.imageAlt ?? `${property.name} interior story and villa atmosphere`}
+          width={760}
+          height={940}
+        />
       </div>
     </section>
   );
 }
 
-export function AboutPrinciplesSection() {
+export function AboutPrinciplesSection({ page }: AboutPageProps = {}) {
+  const values = page?.values?.length ? page.values : aboutPrinciples;
+
   return (
     <section className="about-principles" aria-labelledby="about-principles-title">
       <div className="section-heading section-heading--center">
@@ -67,9 +67,12 @@ export function AboutPrinciplesSection() {
         <p>Our commitment is woven into details guests can feel: calm spaces, local care, and less excess.</p>
       </div>
       <div className="about-principles__grid">
-        {aboutPrinciples.map((principle, index) => (
-          <article className={principle.image ? "about-principle about-principle--image" : "about-principle"} key={principle.title}>
-            {principle.image ? (
+        {values.map((principle, index) => (
+          <article
+            className={"image" in principle && principle.image ? "about-principle about-principle--image" : "about-principle"}
+            key={principle.title}
+          >
+            {"image" in principle && typeof principle.image === "string" ? (
               <Image src={principle.image} alt={`${principle.title} at ${property.name}`} fill sizes="(max-width: 900px) 100vw, 50vw" />
             ) : null}
             <div>
@@ -108,21 +111,21 @@ export function AboutTeamSection() {
   );
 }
 
-export function AboutCtaSection() {
+export function AboutCtaSection({ page }: AboutPageProps = {}) {
   return (
     <section className="about-cta" aria-labelledby="about-cta-title">
       <Image
-        src="/assets/img/hero-coastal-villa.webp"
-        alt={`${property.name} peaceful retreat atmosphere`}
+        src={page?.finalCTA.image ?? "/assets/img/hero-coastal-villa.webp"}
+        alt={page?.finalCTA.imageAlt ?? `${property.name} peaceful retreat atmosphere`}
         fill
         sizes="100vw"
         className="about-cta__image"
       />
       <div className="about-cta__overlay" />
       <div className="about-cta__content">
-        <h2 id="about-cta-title">Reconnect with your island rhythm.</h2>
-        <Button href={getWhatsappUrl()} rel="noreferrer" target="_blank" variant="ghost">
-          Discover Availability
+        <h2 id="about-cta-title">{page?.finalCTA.heading ?? "Reconnect with your island rhythm."}</h2>
+        <Button href={page?.finalCTA.url ?? getWhatsappUrl()} rel="noreferrer" target="_blank" variant="ghost">
+          {page?.finalCTA.label ?? "Discover Availability"}
         </Button>
       </div>
     </section>

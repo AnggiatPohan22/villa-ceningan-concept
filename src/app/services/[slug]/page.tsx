@@ -3,6 +3,7 @@ import { ServiceDetailPageSections } from "@/components/marketing/ServiceDetailP
 import { services } from "@/data/services";
 import { property } from "@/data/property";
 import { getCmsServiceBySlug, getCmsServices } from "@/lib/cms/content";
+import { buildCmsMetadata } from "@/lib/cms/seo";
 
 type ServiceDetailPageProps = {
   params: Promise<{
@@ -26,10 +27,13 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
     };
   }
 
-  return {
+  return buildCmsMetadata({
     title: service.title,
-    description: `${service.summary} at ${property.name}.`
-  };
+    description: `${service.summary} at ${property.name}.`,
+    image: service.detailImage ?? service.image,
+    imageAlt: service.title,
+    seo: service.seo
+  });
 }
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {

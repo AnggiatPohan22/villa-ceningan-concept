@@ -3,13 +3,19 @@ import Link from "next/link";
 import { Button } from "@/components/shared/Button";
 import { getWhatsappUrl, property } from "@/data/property";
 import { services, type ServiceItem } from "@/data/services";
+import type { CmsListingPageContent } from "@/lib/cms/content";
 
-export function ServicesHeroSection() {
+type ServicesSectionsProps = {
+  items?: ServiceItem[];
+  page?: CmsListingPageContent;
+};
+
+export function ServicesHeroSection({ page }: Pick<ServicesSectionsProps, "page"> = {}) {
   return (
     <section className="services3-hero" aria-labelledby="services-hero-title">
       <Image
-        src="/assets/img/services-3.webp"
-        alt={`${property.name} sanctuary service landscape`}
+        src={page?.hero.image ?? "/assets/img/services-3.webp"}
+        alt={page?.hero.imageAlt ?? `${property.name} sanctuary service landscape`}
         fill
         priority
         sizes="100vw"
@@ -17,8 +23,8 @@ export function ServicesHeroSection() {
       />
       <div className="services3-hero__overlay" />
       <div className="services3-hero__content">
-        <h1 id="services-hero-title">Bespoke Sanctuary Services</h1>
-        <p>Experience the art of quiet luxury where every detail is curated for your island rhythm.</p>
+        <h1 id="services-hero-title">{page?.hero.heading ?? "Bespoke Sanctuary Services"}</h1>
+        <p>{page?.hero.description ?? "Experience the art of quiet luxury where every detail is curated for your island rhythm."}</p>
       </div>
       <a className="services3-cue" href="#services3-intro" aria-label="Scroll to services">
         <span />
@@ -27,18 +33,15 @@ export function ServicesHeroSection() {
   );
 }
 
-type ServicesSectionsProps = {
-  items?: ServiceItem[];
-};
-
-export function SignatureServicesSection({ items = services }: ServicesSectionsProps = {}) {
+export function SignatureServicesSection({ items = services, page }: ServicesSectionsProps = {}) {
   return (
     <>
       <section className="services3-intro" id="services3-intro" aria-labelledby="services3-intro-title">
-        <p className="eyebrow">The Villa Ceningan Way</p>
+        <p className="eyebrow">{page?.intro.eyebrow ?? "The Villa Ceningan Way"}</p>
         <h2 id="services3-intro-title">
-          "In the stillness of the island, a stay becomes more than a room. Our services are designed to restore ease, rhythm, and quiet pleasure."
+          &quot;{page?.intro.heading ?? "In the stillness of the island, a stay becomes more than a room. Our services are designed to restore ease, rhythm, and quiet pleasure."}&quot;
         </h2>
+        {page?.intro.description ? <p>{page.intro.description}</p> : null}
       </section>
 
       <section className="services3-list" aria-label="Signature services">
@@ -88,14 +91,14 @@ export function TailoredMomentsSection({ items = services }: ServicesSectionsPro
   );
 }
 
-export function ServicesCtaSection() {
+export function ServicesCtaSection({ page }: Pick<ServicesSectionsProps, "page"> = {}) {
   return (
     <section className="services3-cta" aria-labelledby="services3-cta-title">
-      <h2 id="services3-cta-title">Enhance Your Stay</h2>
-      <p>Ready to curate your bespoke island experience? Our concierge can shape the details around your dates and travel rhythm.</p>
+      <h2 id="services3-cta-title">{page?.listing.heading ?? "Enhance Your Stay"}</h2>
+      <p>{page?.listing.description ?? "Ready to curate your bespoke island experience? Our concierge can shape the details around your dates and travel rhythm."}</p>
       <div className="services3-cta__actions">
-        <Button href="/reservation" variant="secondary">
-          Start Reservation
+        <Button href={page?.listing.cta?.url ?? "/reservation"} variant="secondary">
+          {page?.listing.cta?.label ?? "Start Reservation"}
         </Button>
         <Button href={getWhatsappUrl()} target="_blank" rel="noreferrer" variant="ghost">
           Contact Concierge

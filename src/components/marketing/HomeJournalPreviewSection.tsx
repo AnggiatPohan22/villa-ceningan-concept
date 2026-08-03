@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { blogArticles, type BlogArticle } from "@/data/blog";
+import type { HomeSectionContent } from "@/lib/cms/content";
 
 type HomeJournalPreviewSectionProps = {
   articles?: BlogArticle[];
+  content?: HomeSectionContent;
 };
 
-export function HomeJournalPreviewSection({ articles = blogArticles }: HomeJournalPreviewSectionProps = {}) {
+export function HomeJournalPreviewSection({ articles = blogArticles, content }: HomeJournalPreviewSectionProps = {}) {
   return (
     <section className="home2-journal" aria-labelledby="home-journal-title">
       <div className="home2-section-heading">
-        <p className="eyebrow">Explore</p>
-        <h2 id="home-journal-title">Latest from our blog</h2>
-        <Link className="ui-button ui-button--outline ui-button--md" href="/blog">
-          View All Journal
+        <p className="eyebrow">{content?.eyebrow ?? "Explore"}</p>
+        <h2 id="home-journal-title">{content?.heading ?? "Latest from our blog"}</h2>
+        <Link className="ui-button ui-button--outline ui-button--md" href={content?.cta?.url ?? "/blog"}>
+          {content?.cta?.label ?? "View All Journal"}
         </Link>
       </div>
       <div className="home2-journal__grid">

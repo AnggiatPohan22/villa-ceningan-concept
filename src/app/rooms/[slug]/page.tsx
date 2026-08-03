@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { RoomDetailPageSections } from "@/components/marketing/RoomDetailPageSections";
 import { rooms } from "@/data/rooms";
 import { getCmsRoomBySlug, getCmsRooms } from "@/lib/cms/content";
+import { buildCmsMetadata } from "@/lib/cms/seo";
 
 type RoomPageProps = {
   params: Promise<{
@@ -22,8 +23,13 @@ export async function generateMetadata({ params }: RoomPageProps): Promise<Metad
   }
 
   return {
-    title: room.name,
-    description: room.description
+    ...buildCmsMetadata({
+      title: room.name,
+      description: room.description,
+      image: room.heroImage ?? room.image,
+      imageAlt: room.name,
+      seo: room.seo
+    })
   };
 }
 

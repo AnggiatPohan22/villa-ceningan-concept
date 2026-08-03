@@ -6,22 +6,30 @@ import {
   TailoredMomentsSection
 } from "@/components/marketing/ServicesPageSections";
 import { property } from "@/data/property";
-import { getCmsServices } from "@/lib/cms/content";
+import { getCmsServices, getCmsServicesPage } from "@/lib/cms/content";
+import { buildCmsMetadata } from "@/lib/cms/seo";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description: `Discover tailored island services, concierge support, transfers, and villa comforts at ${property.name}.`
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getCmsServicesPage();
+
+  return buildCmsMetadata({
+    title: "Services",
+    description: `Discover tailored island services, concierge support, transfers, and villa comforts at ${property.name}.`,
+    image: page.hero.image,
+    imageAlt: page.hero.imageAlt,
+    seo: page.seo
+  });
+}
 
 export default async function ServicesPage() {
-  const cmsServices = await getCmsServices();
+  const [cmsServices, cmsPage] = await Promise.all([getCmsServices(), getCmsServicesPage()]);
 
   return (
     <main className="services-page">
-      <ServicesHeroSection />
-      <SignatureServicesSection items={cmsServices} />
+      <ServicesHeroSection page={cmsPage} />
+      <SignatureServicesSection items={cmsServices} page={cmsPage} />
       <TailoredMomentsSection items={cmsServices} />
-      <ServicesCtaSection />
+      <ServicesCtaSection page={cmsPage} />
     </main>
   );
 }

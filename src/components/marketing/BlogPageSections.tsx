@@ -2,19 +2,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { blogArticles, blogCategories, curatorChoices, featuredArticle, type BlogArticle } from "@/data/blog";
 import { getWhatsappUrl } from "@/data/property";
+import type { CmsListingPageContent } from "@/lib/cms/content";
 
 type BlogSectionsProps = {
   articles?: BlogArticle[];
   featured?: BlogArticle;
   curated?: BlogArticle[];
+  page?: CmsListingPageContent;
 };
 
-export function BlogHeroSection({ featured = featuredArticle }: BlogSectionsProps = {}) {
+export function BlogHeroSection({ featured = featuredArticle, page }: BlogSectionsProps = {}) {
+  const hero = page?.hero;
+
   return (
     <section className="blog-hero" aria-labelledby="blog-hero-title">
       <Image
-        src={featured.image}
-        alt="Quiet Villa Ceningan landscape at sunrise"
+        src={hero?.image ?? featured.image}
+        alt={hero?.imageAlt ?? "Quiet Villa Ceningan landscape at sunrise"}
         fill
         priority
         sizes="100vw"
@@ -22,9 +26,9 @@ export function BlogHeroSection({ featured = featuredArticle }: BlogSectionsProp
       />
       <div className="blog-hero__overlay" />
       <div className="blog-hero__content">
-        <p className="blog-pill">{featured.category}</p>
-        <h1 id="blog-hero-title">{featured.title}</h1>
-        <p>{featured.excerpt}</p>
+        <p className="blog-pill">{hero?.eyebrow ?? featured.category}</p>
+        <h1 id="blog-hero-title">{hero?.heading ?? featured.title}</h1>
+        <p>{hero?.description ?? featured.excerpt}</p>
         <Link className="blog-text-link blog-text-link--light" href="#featured-story">
           Read the Article <span aria-hidden="true">-&gt;</span>
         </Link>
@@ -52,7 +56,7 @@ export function BlogToolbar() {
   );
 }
 
-export function BlogJournalSection({ articles = blogArticles, curated = curatorChoices }: BlogSectionsProps = {}) {
+export function BlogJournalSection({ articles = blogArticles, curated = curatorChoices, page }: BlogSectionsProps = {}) {
   const [leadArticle, ...secondaryArticles] = articles;
 
   return (
@@ -67,9 +71,9 @@ export function BlogJournalSection({ articles = blogArticles, curated = curatorC
             <span>{leadArticle.date}</span>
           </div>
           <h2 id="blog-journal-title">
-            <Link href="/blog">{leadArticle.title}</Link>
+            <Link href="/blog">{page?.listing.heading ?? leadArticle.title}</Link>
           </h2>
-          <p>{leadArticle.excerpt}</p>
+          <p>{page?.listing.description ?? leadArticle.excerpt}</p>
           <Link className="blog-text-link" href="/blog">
             Read Story
           </Link>

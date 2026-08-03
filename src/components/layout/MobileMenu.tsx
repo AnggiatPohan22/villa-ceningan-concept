@@ -3,13 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { getWhatsappUrl, property } from "@/data/property";
+import { property } from "@/data/property";
 import { primaryNavigation } from "@/data/navigation";
+import type { CmsHeaderContent } from "@/lib/cms/content";
 
 const languageOptions = ["ENG", "ID"] as const;
 const currencyOptions = ["IDR", "USD"] as const;
 
-export function MobileMenu() {
+type MobileMenuProps = {
+  header?: CmsHeaderContent;
+};
+
+export function MobileMenu({ header }: MobileMenuProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [language, setLanguage] = useState<(typeof languageOptions)[number]>("ENG");
@@ -82,6 +87,13 @@ export function MobileMenu() {
     return pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
   }
 
+  const navigationItems = header?.navigationItems ?? primaryNavigation;
+  const cta = header?.primaryCTA ?? {
+    label: "Book Now",
+    url: `https://wa.me/${property.whatsapp}?text=${encodeURIComponent(property.bookingMessage)}`,
+    openInNewTab: true
+  };
+
   return (
     <div className={isOpen ? "mobile-menu is-open" : isVisible ? "mobile-menu is-closing" : "mobile-menu"}>
       <button
@@ -100,9 +112,9 @@ export function MobileMenu() {
         </span>
       </button>
       <div className="mobile-menu__panel" hidden={!isVisible} id={menuId}>
-        <div className="mobile-menu__brand" aria-label={property.name}>
-          {property.name}
-          <small>{property.propertyType}</small>
+        <div className="mobile-menu__brand" aria-label={header?.brand.name ?? property.name}>
+          {header?.brand.name ?? property.name}
+          <small>{header?.brand.propertyType ?? property.propertyType}</small>
         </div>
         <div className="mobile-menu__switchers" aria-label="Site preferences">
           <fieldset>
@@ -140,7 +152,7 @@ export function MobileMenu() {
         </div>
         <p className="mobile-menu__intro">Welcome to your private island retreat.</p>
         <nav aria-label="Mobile navigation">
-          {primaryNavigation.map((item) => (
+          {navigationItems.map((item) => (
             <Link
               aria-current={isActive(item.href) ? "page" : undefined}
               className={isActive(item.href) ? "is-active" : undefined}
@@ -152,8 +164,14 @@ export function MobileMenu() {
             </Link>
           ))}
         </nav>
-        <a className="mobile-menu__booking" href={getWhatsappUrl()} target="_blank" rel="noreferrer" onClick={closeMenu}>
-          Book Now
+        <a
+          className="mobile-menu__booking"
+          href={cta.url}
+          target={cta.openInNewTab ? "_blank" : undefined}
+          rel={cta.openInNewTab ? "noreferrer" : undefined}
+          onClick={closeMenu}
+        >
+          {cta.label}
         </a>
       </div>
     </div>

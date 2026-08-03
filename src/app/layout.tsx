@@ -5,39 +5,37 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { FloatingPromoAd } from "@/components/layout/FloatingPromoAd";
 import { lodgingStructuredData } from "@/lib/seo/structured-data";
+import { getCmsSiteSettings } from "@/lib/cms/content";
+import { buildCmsMetadata } from "@/lib/cms/seo";
 
-export const metadata: Metadata = {
-  title: {
-    default: `${property.name} | Boutique Villa Website Template`,
-    template: `%s | ${property.name}`
-  },
-  description: property.tagline,
-  metadataBase: new URL(property.siteUrl),
-  alternates: {
-    canonical: "/"
-  },
-  openGraph: {
-    title: property.name,
-    description: property.tagline,
-    type: "website",
-    url: property.siteUrl,
-    siteName: property.name,
-    images: [
-      {
-        url: property.heroImage,
-        width: 1200,
-        height: 630,
-        alt: property.name
-      }
-    ]
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: property.name,
-    description: property.tagline,
-    images: [property.heroImage]
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getCmsSiteSettings();
+  const metadata = buildCmsMetadata({
+    title: settings.defaultSEOTitle,
+    description: settings.defaultSEODescription,
+    image: settings.defaultOpenGraphImage,
+    imageAlt: settings.siteName,
+    seo: settings.seo
+  });
+
+  return {
+    ...metadata,
+    title: {
+      default: settings.defaultSEOTitle,
+      template: `%s | ${settings.siteName}`
+    },
+    metadataBase: new URL(property.siteUrl),
+    alternates: {
+      canonical: "/"
+    },
+    openGraph: {
+      ...metadata.openGraph,
+      type: "website",
+      url: property.siteUrl,
+      siteName: settings.siteName
+    }
+  };
+}
 
 export default function RootLayout({
   children

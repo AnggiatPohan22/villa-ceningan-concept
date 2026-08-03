@@ -4,13 +4,19 @@ import { AvailabilityBar } from "@/components/shared/AvailabilityBar";
 import { Button } from "@/components/shared/Button";
 import { property } from "@/data/property";
 import { rooms, type RoomItem } from "@/data/rooms";
+import type { CmsListingPageContent } from "@/lib/cms/content";
 
-export function RoomsHeroSection() {
+type RoomsPageSectionsProps = {
+  items?: RoomItem[];
+  page?: CmsListingPageContent;
+};
+
+export function RoomsHeroSection({ page }: Pick<RoomsPageSectionsProps, "page"> = {}) {
   return (
     <section className="rooms3-hero" aria-labelledby="rooms3-hero-title">
       <Image
-        src="/assets/img/hero-coastal-villa.webp"
-        alt={`${property.name} coastal villa pool at sunset`}
+        src={page?.hero.image ?? "/assets/img/hero-coastal-villa.webp"}
+        alt={page?.hero.imageAlt ?? `${property.name} coastal villa pool at sunset`}
         fill
         priority
         sizes="100vw"
@@ -18,23 +24,20 @@ export function RoomsHeroSection() {
       />
       <div className="rooms3-hero__overlay" />
       <div className="rooms3-hero__content">
-        <h1 id="rooms3-hero-title">Our Rooms</h1>
-        <p>Discover a collection of curated island sanctuaries designed for deep rest and quiet elegance.</p>
+        <h1 id="rooms3-hero-title">{page?.hero.heading ?? "Our Rooms"}</h1>
+        <p>{page?.hero.description ?? "Discover a collection of curated island sanctuaries designed for deep rest and quiet elegance."}</p>
       </div>
     </section>
   );
 }
 
-type RoomsPageSectionsProps = {
-  items?: RoomItem[];
-};
-
-export function RoomsCollectionSection({ items = rooms }: RoomsPageSectionsProps = {}) {
+export function RoomsCollectionSection({ items = rooms, page }: RoomsPageSectionsProps = {}) {
   return (
     <section className="rooms3-collection" aria-labelledby="rooms3-collection-title">
       <div className="rooms3-collection__intro">
-        <p className="eyebrow">Signature Collection</p>
-        <h2 id="rooms3-collection-title">Stay where island calm meets personal villa comfort.</h2>
+        <p className="eyebrow">{page?.intro.eyebrow ?? "Signature Collection"}</p>
+        <h2 id="rooms3-collection-title">{page?.listing.heading ?? "Stay where island calm meets personal villa comfort."}</h2>
+        {page?.listing.description ? <p>{page.listing.description}</p> : null}
       </div>
       <div className="rooms3-list">
         {items.map((room, index) => (
@@ -88,20 +91,20 @@ export function RoomsCollectionSection({ items = rooms }: RoomsPageSectionsProps
         ))}
       </div>
       <div className="rooms3-collection__cta">
-        <Button href="/reservation">See More Rooms</Button>
+        <Button href={page?.listing.cta?.url ?? "/reservation"}>{page?.listing.cta?.label ?? "See More Rooms"}</Button>
       </div>
     </section>
   );
 }
 
-export function RoomsPageSections({ items = rooms }: RoomsPageSectionsProps = {}) {
+export function RoomsPageSections({ items = rooms, page }: RoomsPageSectionsProps = {}) {
   return (
     <>
-      <RoomsHeroSection />
+      <RoomsHeroSection page={page} />
       <div className="rooms3-availability-shell">
         <AvailabilityBar className="rooms3-availability" />
       </div>
-      <RoomsCollectionSection items={items} />
+      <RoomsCollectionSection items={items} page={page} />
     </>
   );
 }

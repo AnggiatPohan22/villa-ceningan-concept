@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { rooms, type RoomItem } from "@/data/rooms";
+import type { HomeSectionContent } from "@/lib/cms/content";
 
 type HomeRoomsShowcaseSectionProps = {
   items?: RoomItem[];
+  content?: HomeSectionContent;
 };
 
-export function HomeRoomsShowcaseSection({ items = rooms }: HomeRoomsShowcaseSectionProps = {}) {
+export function HomeRoomsShowcaseSection({ items = rooms, content }: HomeRoomsShowcaseSectionProps = {}) {
   const featuredRoom = items[1] ?? items[0];
 
   return (
     <section className="home2-rooms" aria-labelledby="home-rooms-title">
       <div className="home2-rooms__content">
-        <p className="eyebrow">Discover our rooms</p>
-        <h2 id="home-rooms-title">Luxury interior</h2>
+        <p className="eyebrow">{content?.eyebrow ?? "Discover our rooms"}</p>
+        <h2 id="home-rooms-title">{content?.heading ?? "Luxury interior"}</h2>
         <div className="home2-rooms__list">
           {items.map((room) => (
             <Link className="home2-room-row" href={`/rooms/${room.slug}`} key={room.slug}>

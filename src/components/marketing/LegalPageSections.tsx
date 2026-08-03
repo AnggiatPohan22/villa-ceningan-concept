@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getLegalPage, type LegalPageContent } from "@/data/legal";
+import type { LegalPageContent } from "@/data/legal";
 import { property } from "@/data/property";
+import { getCmsLegalPage } from "@/lib/cms/content";
 
 type LegalPageSectionsProps = {
   slug: LegalPageContent["slug"];
 };
 
-export function LegalPageSections({ slug }: LegalPageSectionsProps) {
-  const page = getLegalPage(slug);
+export async function LegalPageSections({ slug }: LegalPageSectionsProps) {
+  const page = await getCmsLegalPage(slug);
 
   if (!page) {
     notFound();

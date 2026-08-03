@@ -5,12 +5,14 @@ import { ReservationAvailabilitySearch } from "@/components/marketing/Reservatio
 import { property } from "@/data/property";
 import { reservationOverview, reservationRoomDetails } from "@/data/reservation";
 import { rooms, type RoomItem } from "@/data/rooms";
+import type { CmsPageHeroContent } from "@/lib/cms/content";
 
 type ReservationRoomDetails = typeof reservationRoomDetails;
 type ReservationOverview = typeof reservationOverview;
 
 type ReservationPageSectionsProps = {
   items?: RoomItem[];
+  hero?: CmsPageHeroContent;
   roomDetails?: ReservationRoomDetails;
   overview?: ReservationOverview;
 };
@@ -21,13 +23,15 @@ function getRoomDetail(details: ReservationRoomDetails, slug: string) {
 
 export function ReservationPageSections({
   items = rooms,
+  hero,
   roomDetails = reservationRoomDetails,
   overview = reservationOverview
 }: ReservationPageSectionsProps = {}) {
   return (
     <main className="reservation-page">
       <section className="reservation-hero" aria-labelledby="reservation-title">
-        <h1 id="reservation-title">Reservation</h1>
+        <h1 id="reservation-title">{hero?.heading ?? "Reservation"}</h1>
+        {hero?.description ? <p>{hero.description}</p> : null}
         <nav aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span aria-hidden="true" />
