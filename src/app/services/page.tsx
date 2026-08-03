@@ -28,7 +28,7 @@ export default async function ServicesPage() {
     <main className="services-page">
       <ServicesHeroSection page={cmsPage} />
       <SignatureServicesSection items={cmsServices} page={cmsPage} />
-      <TailoredMomentsSection items={cmsServices} />
+      <TailoredMomentsSection items={cmsServices} page={cmsPage} />
       <ServicesCtaSection page={cmsPage} />
     </main>
   );

@@ -26,7 +26,7 @@ export function ServicesHeroSection({ page }: Pick<ServicesSectionsProps, "page"
         <h1 id="services-hero-title">{page?.hero.heading ?? "Bespoke Sanctuary Services"}</h1>
         <p>{page?.hero.description ?? "Experience the art of quiet luxury where every detail is curated for your island rhythm."}</p>
       </div>
-      <a className="services3-cue" href="#services3-intro" aria-label="Scroll to services">
+      <a className="services3-cue" href="#services3-intro" aria-label={page?.hero.scrollCueLabel ?? "Scroll to services"}>
         <span />
       </a>
     </section>
@@ -44,7 +44,7 @@ export function SignatureServicesSection({ items = services, page }: ServicesSec
         {page?.intro.description ? <p>{page.intro.description}</p> : null}
       </section>
 
-      <section className="services3-list" aria-label="Signature services">
+      <section className="services3-list" aria-label={page?.signatureServices?.ariaLabel ?? "Signature services"}>
         {items.filter((service) => service.slug !== "seamless-transit").map((service, index) => (
           <article className="services3-row" key={service.slug}>
             <Link className="services3-row__media" href={`/services/${service.slug}`}>
@@ -70,7 +70,7 @@ export function SignatureServicesSection({ items = services, page }: ServicesSec
   );
 }
 
-export function TailoredMomentsSection({ items = services }: ServicesSectionsProps = {}) {
+export function TailoredMomentsSection({ items = services, page }: ServicesSectionsProps = {}) {
   const transit = items.find((service) => service.slug === "seamless-transit") ?? items[0];
 
   return (
@@ -80,8 +80,8 @@ export function TailoredMomentsSection({ items = services }: ServicesSectionsPro
         <h2 id="services3-transit-title">{transit.title}</h2>
         <p>{transit.summary}</p>
         <div className="services3-transit__meta">
-          <span>Island route</span>
-          <span>Concierge timing</span>
+          <span>{page?.tailoredMoment?.metaLabelOne ?? "Island route"}</span>
+          <span>{page?.tailoredMoment?.metaLabelTwo ?? "Concierge timing"}</span>
         </div>
       </div>
       <Link className="services3-transit__media" href={`/services/${transit.slug}`}>
@@ -92,16 +92,18 @@ export function TailoredMomentsSection({ items = services }: ServicesSectionsPro
 }
 
 export function ServicesCtaSection({ page }: Pick<ServicesSectionsProps, "page"> = {}) {
+  const finalCTA = page?.finalCTA;
+
   return (
     <section className="services3-cta" aria-labelledby="services3-cta-title">
-      <h2 id="services3-cta-title">{page?.listing.heading ?? "Enhance Your Stay"}</h2>
-      <p>{page?.listing.description ?? "Ready to curate your bespoke island experience? Our concierge can shape the details around your dates and travel rhythm."}</p>
+      <h2 id="services3-cta-title">{finalCTA?.heading ?? page?.listing.heading ?? "Enhance Your Stay"}</h2>
+      <p>{finalCTA?.description ?? page?.listing.description ?? "Ready to curate your bespoke island experience? Our concierge can shape the details around your dates and travel rhythm."}</p>
       <div className="services3-cta__actions">
-        <Button href={page?.listing.cta?.url ?? "/reservation"} variant="secondary">
-          {page?.listing.cta?.label ?? "Start Reservation"}
+        <Button href={finalCTA?.primary.url ?? page?.listing.cta?.url ?? "/reservation"} variant="secondary">
+          {finalCTA?.primary.label ?? page?.listing.cta?.label ?? "Start Reservation"}
         </Button>
-        <Button href={getWhatsappUrl()} target="_blank" rel="noreferrer" variant="ghost">
-          Contact Concierge
+        <Button href={finalCTA?.secondary.url ?? getWhatsappUrl()} target="_blank" rel="noreferrer" variant="ghost">
+          {finalCTA?.secondary.label ?? "Contact Concierge"}
         </Button>
       </div>
     </section>

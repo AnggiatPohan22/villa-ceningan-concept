@@ -23,22 +23,22 @@ export default async function ContactPage() {
   const page = await getCmsContactPage();
   const contactMethods = [
     {
-      label: "Villa Location",
+      label: page.contactInquiry.locationLabel,
       title: page.address,
       href: null,
-      text: "Nusa Ceningan, Klungkung, Bali"
+      text: page.contactInquiry.locationText
     },
     {
-      label: "WhatsApp Concierge",
+      label: page.contactInquiry.whatsAppLabel,
       title: page.phone,
       href: `https://wa.me/${page.whatsApp.replace(/[^\d]/g, "")}?text=${encodeURIComponent("Hello Villa Ceningan, I would like to contact the concierge.")}`,
-      text: "Direct inquiries for dates, arrivals, and stay details."
+      text: page.contactInquiry.whatsAppText
     },
     {
-      label: "Reservations",
+      label: page.contactInquiry.emailLabel,
       title: page.email,
       href: `mailto:${page.email}`,
-      text: "Email us for longer stay requests or detailed arrangements."
+      text: page.contactInquiry.emailText
     }
   ];
 
@@ -63,7 +63,7 @@ export default async function ContactPage() {
 
       <section className="contact-inquiry" aria-labelledby="contact-inquiry-title">
         <div className="contact-inquiry__details">
-          <h2 id="contact-inquiry-title">{page.contactHeading}</h2>
+          <h2 id="contact-inquiry-title">{page.contactInquiry.heading}</h2>
           <div className="contact-methods">
             {contactMethods.map((method) => (
               <article className="contact-method" key={method.label}>
@@ -83,24 +83,24 @@ export default async function ContactPage() {
             ))}
           </div>
 
-          <aside className="contact-concierge" aria-label="Concierge assistance">
-            <h3>Concierge Assistance</h3>
-            <p>{page.contactDescription}</p>
-            <Link href={page.finalCTA.url}>{page.finalCTA.label}</Link>
+          <aside className="contact-concierge" aria-label={page.contactInquiry.conciergeAriaLabel}>
+            <h3>{page.contactInquiry.conciergeHeading}</h3>
+            <p>{page.contactInquiry.description}</p>
+            <Link href={page.contactInquiry.button.url}>{page.contactInquiry.button.label}</Link>
           </aside>
         </div>
 
-        <ContactInquiryForm />
+        <ContactInquiryForm content={page.contactForm} whatsAppNumber={page.whatsApp} />
       </section>
 
       <section className="contact-map-section" aria-labelledby="contact-map-title">
         <div className="contact-map-section__heading">
-          <h2 id="contact-map-title">A Hidden Gem</h2>
-          <p>Set in the rhythm of Nusa Ceningan, close enough to island life and quiet enough to fully slow down.</p>
+          <h2 id="contact-map-title">{page.mapSection.heading}</h2>
+          <p>{page.mapSection.description}</p>
         </div>
         <div className="contact-map-card">
           <iframe
-            title={`${property.name} map`}
+            title={page.mapSection.mapTitle}
             src={page.mapEmbedURL}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -109,17 +109,17 @@ export default async function ContactPage() {
             <span />
           </div>
           <aside>
-            <h3>{property.location}</h3>
+            <h3>{page.mapSection.locationHeading}</h3>
             <p>{page.address}</p>
-            <Button href={page.finalCTA.url} rel="noreferrer" target="_blank" variant="outline" size="sm">
-              {page.finalCTA.label}
+            <Button href={page.mapSection.button.url} rel="noreferrer" target="_blank" variant="outline" size="sm">
+              {page.mapSection.button.label}
             </Button>
           </aside>
         </div>
       </section>
 
-      <section className="contact-quote" aria-label="Villa Ceningan quote">
-        <p>"Peace is found in simple arrivals, warm care, and the feeling that every detail is already prepared."</p>
+      <section className="contact-quote" aria-label={page.quote.ariaLabel}>
+        <p>&quot;{page.quote.text}&quot;</p>
       </section>
     </main>
   );

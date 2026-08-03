@@ -85,6 +85,26 @@ The Rooms route now expects this CMS order:
 
 Rooms card labels, detail button text, availability form labels, and About team/principle content are editable from CMS.
 
+## Services and Contact Section Contract
+
+The Services route now expects this CMS order:
+
+1. `hero`
+2. `intro`
+3. `signatureServices`
+4. `tailoredMoment`
+5. `finalCTA`
+
+The Contact route now expects this CMS order:
+
+1. `hero`
+2. `contactInquiry`
+3. `contactForm`
+4. `mapSection`
+5. `quote`
+
+Services CTA buttons, tailored moment labels, Contact methods, Contact form labels/placeholders/options, map copy, and quote copy are editable from CMS.
+
 ## Cache and Fallback
 
 - Development fetches remain `cache: "no-store"` through `fetchCms()`.

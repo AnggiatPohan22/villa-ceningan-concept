@@ -165,6 +165,25 @@ export type CmsListingPageContent = {
     };
   };
   availabilityBar: CmsAvailabilityBarContent;
+  signatureServices?: {
+    ariaLabel: string;
+  };
+  tailoredMoment?: {
+    metaLabelOne: string;
+    metaLabelTwo: string;
+  };
+  finalCTA?: {
+    heading: string;
+    description: string;
+    primary: {
+      label: string;
+      url: string;
+    };
+    secondary: {
+      label: string;
+      url: string;
+    };
+  };
   seo?: CmsSeo | null;
 };
 
@@ -285,13 +304,59 @@ export type CmsAboutPageContent = {
 
 export type CmsContactPageContent = {
   hero: CmsPageHeroContent;
-  contactHeading: string;
-  contactDescription: string;
   phone: string;
   email: string;
   whatsApp: string;
   address: string;
   mapEmbedURL: string;
+  contactInquiry: {
+    heading: string;
+    description: string;
+    locationLabel: string;
+    locationText: string;
+    whatsAppLabel: string;
+    whatsAppText: string;
+    emailLabel: string;
+    emailText: string;
+    conciergeAriaLabel: string;
+    conciergeHeading: string;
+    button: {
+      label: string;
+      url: string;
+    };
+  };
+  contactForm: {
+    ariaLabel: string;
+    heading: string;
+    description: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    subjectLabel: string;
+    subjectOptions: string[];
+    messageLabel: string;
+    messagePlaceholder: string;
+    submitButtonLabel: string;
+    submittingButtonLabel: string;
+    whatsAppMessageIntro: string;
+  };
+  mapSection: {
+    heading: string;
+    description: string;
+    locationHeading: string;
+    mapTitle: string;
+    button: {
+      label: string;
+      url: string;
+    };
+  };
+  quote: {
+    ariaLabel: string;
+    text: string;
+  };
+  contactHeading: string;
+  contactDescription: string;
   operationalHours: Array<{
     label: string;
     hours: string;
@@ -475,7 +540,26 @@ type CmsListingPage = {
     heading?: string | null;
     description?: string | null;
     image?: unknown;
+    scrollCueLabel?: string | null;
   } | null;
+  intro?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+  } | null;
+  signatureServices?: {
+    ariaLabel?: string | null;
+  } | null;
+  tailoredMoment?: {
+    metaLabelOne?: string | null;
+    metaLabelTwo?: string | null;
+  } | null;
+  finalCTA?: ({
+    heading?: string | null;
+    description?: string | null;
+    primary?: CmsCta | null;
+    secondary?: CmsCta | null;
+  } & CmsCta) | null;
   availabilityBar?: {
     sectionAriaLabel?: string | null;
     formAriaLabel?: string | null;
@@ -510,7 +594,6 @@ type CmsListingPage = {
   listingHeading?: string | null;
   listingDescription?: string | null;
   listingCTA?: CmsCta | null;
-  finalCTA?: CmsCta | null;
 } & CmsPublishStatus &
   CmsSeoFields;
 
@@ -670,6 +753,59 @@ type CmsAboutPage = {
   CmsSeoFields;
 
 type CmsContactPage = {
+  hero?: {
+    heading?: string | null;
+    description?: string | null;
+    image?: unknown;
+  } | null;
+  contactInquiry?: {
+    heading?: string | null;
+    description?: string | null;
+    locationLabel?: string | null;
+    locationText?: string | null;
+    whatsAppLabel?: string | null;
+    whatsAppText?: string | null;
+    emailLabel?: string | null;
+    emailText?: string | null;
+    conciergeAriaLabel?: string | null;
+    conciergeHeading?: string | null;
+    button?: CmsCta | null;
+    phone?: string | null;
+    email?: string | null;
+    whatsApp?: string | null;
+    address?: string | null;
+  } | null;
+  contactForm?: {
+    ariaLabel?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    nameLabel?: string | null;
+    namePlaceholder?: string | null;
+    emailLabel?: string | null;
+    emailPlaceholder?: string | null;
+    subjectLabel?: string | null;
+    subjectOptionOne?: string | null;
+    subjectOptionTwo?: string | null;
+    subjectOptionThree?: string | null;
+    subjectOptionFour?: string | null;
+    messageLabel?: string | null;
+    messagePlaceholder?: string | null;
+    submitButtonLabel?: string | null;
+    submittingButtonLabel?: string | null;
+    whatsAppMessageIntro?: string | null;
+  } | null;
+  mapSection?: {
+    heading?: string | null;
+    description?: string | null;
+    locationHeading?: string | null;
+    mapTitle?: string | null;
+    mapEmbedURL?: string | null;
+    button?: CmsCta | null;
+  } | null;
+  quote?: {
+    ariaLabel?: string | null;
+    text?: string | null;
+  } | null;
   heroHeading?: string | null;
   heroDescription?: string | null;
   heroImage?: unknown;
@@ -1064,7 +1200,8 @@ function fallbackListingPage(kind: "rooms" | "services" | "blog"): CmsListingPag
         heading: "Bespoke Sanctuary Services",
         description: "Experience the art of quiet luxury where every detail is curated for your island rhythm.",
         image: "/assets/img/services-3.webp",
-        imageAlt: `${property.name} sanctuary service landscape`
+        imageAlt: `${property.name} sanctuary service landscape`,
+        scrollCueLabel: "Scroll to services"
       },
       intro: {
         eyebrow: "The Villa Ceningan Way",
@@ -1080,7 +1217,26 @@ function fallbackListingPage(kind: "rooms" | "services" | "blog"): CmsListingPag
           url: "/reservation"
         }
       },
-      availabilityBar
+      availabilityBar,
+      signatureServices: {
+        ariaLabel: "Signature services"
+      },
+      tailoredMoment: {
+        metaLabelOne: "Island route",
+        metaLabelTwo: "Concierge timing"
+      },
+      finalCTA: {
+        heading: "Enhance Your Stay",
+        description: "Ready to curate your bespoke island experience? Our concierge can shape the details around your dates and travel rhythm.",
+        primary: {
+          label: "Start Reservation",
+          url: "/reservation"
+        },
+        secondary: {
+          label: "Contact Concierge",
+          url: getWhatsappUrlFromNumber(property.whatsapp)
+        }
+      }
     };
   }
 
@@ -1148,7 +1304,8 @@ function mapListingPage(data: CmsListingPage, fallback: CmsListingPageContent): 
       heading: data.hero?.heading ?? data.heroHeading ?? fallback.hero.heading,
       description: data.hero?.description ?? data.heroDescription ?? fallback.hero.description,
       image: getMediaUrl(data.hero?.image ?? data.heroImage, fallback.hero.image),
-      imageAlt: getMediaAlt(data.hero?.image ?? data.heroImage, fallback.hero.imageAlt)
+      imageAlt: getMediaAlt(data.hero?.image ?? data.heroImage, fallback.hero.imageAlt),
+      scrollCueLabel: data.hero?.scrollCueLabel ?? fallback.hero.scrollCueLabel
     },
     availabilityBar: {
       sectionAriaLabel: data.availabilityBar?.sectionAriaLabel ?? fallback.availabilityBar.sectionAriaLabel,
@@ -1162,10 +1319,25 @@ function mapListingPage(data: CmsListingPage, fallback: CmsListingPageContent): 
       submitButtonURL: data.availabilityBar?.submitButtonURL ?? fallback.availabilityBar.submitButtonURL
     },
     intro: {
-      eyebrow: data.roomCollection?.eyebrow ?? data.heroEyebrow ?? fallback.intro.eyebrow,
-      heading: data.roomCollection?.heading ?? data.introHeading ?? fallback.intro.heading,
-      description: data.roomCollection?.description ?? data.introDescription ?? fallback.intro.description
+      eyebrow: data.intro?.eyebrow ?? data.roomCollection?.eyebrow ?? data.heroEyebrow ?? fallback.intro.eyebrow,
+      heading: data.intro?.heading ?? data.roomCollection?.heading ?? data.introHeading ?? fallback.intro.heading,
+      description: data.intro?.description ?? data.roomCollection?.description ?? data.introDescription ?? fallback.intro.description
     },
+    signatureServices: {
+      ariaLabel: data.signatureServices?.ariaLabel ?? fallback.signatureServices?.ariaLabel ?? "Signature services"
+    },
+    tailoredMoment: {
+      metaLabelOne: data.tailoredMoment?.metaLabelOne ?? fallback.tailoredMoment?.metaLabelOne ?? "Island route",
+      metaLabelTwo: data.tailoredMoment?.metaLabelTwo ?? fallback.tailoredMoment?.metaLabelTwo ?? "Concierge timing"
+    },
+    finalCTA: data.finalCTA && "primary" in data.finalCTA
+      ? {
+          heading: data.finalCTA.heading ?? fallback.finalCTA?.heading ?? fallback.listing.heading,
+          description: data.finalCTA.description ?? fallback.finalCTA?.description ?? fallback.listing.description,
+          primary: ctaFromCms(data.finalCTA.primary, fallback.finalCTA?.primary ?? fallback.listing.cta ?? { label: "Start Reservation", url: "/reservation" }),
+          secondary: ctaFromCms(data.finalCTA.secondary, fallback.finalCTA?.secondary ?? { label: "Contact Concierge", url: getWhatsappUrlFromNumber(property.whatsapp) })
+        }
+      : fallback.finalCTA,
     listing: {
       heading: data.roomCollection?.heading ?? data.listingHeading ?? fallback.listing.heading,
       description: data.roomCollection?.description ?? data.listingDescription ?? fallback.listing.description,
@@ -1423,14 +1595,61 @@ function fallbackContactPage(): CmsContactPageContent {
       image: "/assets/img/hero-bg-2.webp",
       imageAlt: `${property.name} tropical island view`
     },
-    contactHeading: "Reach Us Directly",
-    contactDescription:
-      "Our team can help arrange island transfers, room preferences, private meals, and simple arrival support before your stay begins.",
     phone: property.phone,
     email: property.email,
     whatsApp: property.whatsapp,
     address: property.address,
     mapEmbedURL: property.mapEmbedUrl,
+    contactHeading: "Reach Us Directly",
+    contactDescription:
+      "Our team can help arrange island transfers, room preferences, private meals, and simple arrival support before your stay begins.",
+    contactInquiry: {
+      heading: "Reach Us Directly",
+      description:
+        "Our team can help arrange island transfers, room preferences, private meals, and simple arrival support before your stay begins.",
+      locationLabel: "Villa Location",
+      locationText: "Nusa Ceningan, Klungkung, Bali",
+      whatsAppLabel: "WhatsApp Concierge",
+      whatsAppText: "Direct inquiries for dates, arrivals, and stay details.",
+      emailLabel: "Reservations",
+      emailText: "Email us for longer stay requests or detailed arrangements.",
+      conciergeAriaLabel: "Concierge assistance",
+      conciergeHeading: "Concierge Assistance",
+      button: {
+        label: "Get Directions",
+        url: getWhatsappUrlFromNumber(property.whatsapp, "Hello Villa Ceningan, please share directions to the villa.")
+      }
+    },
+    contactForm: {
+      ariaLabel: "Contact inquiry",
+      heading: "Send an Inquiry",
+      description: "Share your stay preferences and our concierge will continue the conversation directly.",
+      nameLabel: "Name",
+      namePlaceholder: "Your full name",
+      emailLabel: "Email",
+      emailPlaceholder: "email@example.com",
+      subjectLabel: "Subject",
+      subjectOptions: ["General Inquiry", "Availability Request", "Villa Services", "Special Request"],
+      messageLabel: "Message",
+      messagePlaceholder: "Tell us about your island stay, arrival plan, or special request.",
+      submitButtonLabel: "Submit Inquiry",
+      submittingButtonLabel: "Opening WhatsApp...",
+      whatsAppMessageIntro: `Hello ${property.name}, I would like to send a contact inquiry.`
+    },
+    mapSection: {
+      heading: "A Hidden Gem",
+      description: "Set in the rhythm of Nusa Ceningan, close enough to island life and quiet enough to fully slow down.",
+      locationHeading: property.location,
+      mapTitle: `${property.name} map`,
+      button: {
+        label: "Get Directions",
+        url: getWhatsappUrlFromNumber(property.whatsapp, "Hello Villa Ceningan, please share directions to the villa.")
+      }
+    },
+    quote: {
+      ariaLabel: "Villa Ceningan quote",
+      text: "Peace is found in simple arrivals, warm care, and the feeling that every detail is already prepared."
+    },
     operationalHours: [],
     finalCTA: {
       label: "Get Directions",
@@ -1446,18 +1665,71 @@ function mapContactPage(data: CmsContactPage): CmsContactPageContent {
   return {
     hero: {
       eyebrow: fallback.hero.eyebrow,
-      heading: data.heroHeading ?? fallback.hero.heading,
-      description: data.heroDescription ?? fallback.hero.description,
-      image: getMediaUrl(data.heroImage, fallback.hero.image),
-      imageAlt: getMediaAlt(data.heroImage, fallback.hero.imageAlt)
+      heading: data.hero?.heading ?? data.heroHeading ?? fallback.hero.heading,
+      description: data.hero?.description ?? data.heroDescription ?? fallback.hero.description,
+      image: getMediaUrl(data.hero?.image ?? data.heroImage, fallback.hero.image),
+      imageAlt: getMediaAlt(data.hero?.image ?? data.heroImage, fallback.hero.imageAlt)
     },
-    contactHeading: data.contactHeading ?? fallback.contactHeading,
-    contactDescription: data.contactDescription ?? fallback.contactDescription,
-    phone: data.phone ?? fallback.phone,
-    email: data.email ?? fallback.email,
-    whatsApp: data.whatsApp ?? fallback.whatsApp,
-    address: data.address ?? fallback.address,
-    mapEmbedURL: data.mapEmbedURL ?? fallback.mapEmbedURL,
+    phone: data.contactInquiry?.phone ?? data.phone ?? fallback.phone,
+    email: data.contactInquiry?.email ?? data.email ?? fallback.email,
+    whatsApp: data.contactInquiry?.whatsApp ?? data.whatsApp ?? fallback.whatsApp,
+    address: data.contactInquiry?.address ?? data.address ?? fallback.address,
+    mapEmbedURL: data.mapSection?.mapEmbedURL ?? data.mapEmbedURL ?? fallback.mapEmbedURL,
+    contactHeading: data.contactInquiry?.heading ?? data.contactHeading ?? fallback.contactHeading,
+    contactDescription: data.contactInquiry?.description ?? data.contactDescription ?? fallback.contactDescription,
+    contactInquiry: {
+      heading: data.contactInquiry?.heading ?? data.contactHeading ?? fallback.contactInquiry.heading,
+      description: data.contactInquiry?.description ?? data.contactDescription ?? fallback.contactInquiry.description,
+      locationLabel: data.contactInquiry?.locationLabel ?? fallback.contactInquiry.locationLabel,
+      locationText: data.contactInquiry?.locationText ?? fallback.contactInquiry.locationText,
+      whatsAppLabel: data.contactInquiry?.whatsAppLabel ?? fallback.contactInquiry.whatsAppLabel,
+      whatsAppText: data.contactInquiry?.whatsAppText ?? fallback.contactInquiry.whatsAppText,
+      emailLabel: data.contactInquiry?.emailLabel ?? fallback.contactInquiry.emailLabel,
+      emailText: data.contactInquiry?.emailText ?? fallback.contactInquiry.emailText,
+      conciergeAriaLabel: data.contactInquiry?.conciergeAriaLabel ?? fallback.contactInquiry.conciergeAriaLabel,
+      conciergeHeading: data.contactInquiry?.conciergeHeading ?? fallback.contactInquiry.conciergeHeading,
+      button: ctaFromCms(data.contactInquiry?.button ?? data.finalCTA, fallback.contactInquiry.button)
+    },
+    contactForm: {
+      ariaLabel: data.contactForm?.ariaLabel ?? fallback.contactForm.ariaLabel,
+      heading: data.contactForm?.heading ?? fallback.contactForm.heading,
+      description: data.contactForm?.description ?? fallback.contactForm.description,
+      nameLabel: data.contactForm?.nameLabel ?? fallback.contactForm.nameLabel,
+      namePlaceholder: data.contactForm?.namePlaceholder ?? fallback.contactForm.namePlaceholder,
+      emailLabel: data.contactForm?.emailLabel ?? fallback.contactForm.emailLabel,
+      emailPlaceholder: data.contactForm?.emailPlaceholder ?? fallback.contactForm.emailPlaceholder,
+      subjectLabel: data.contactForm?.subjectLabel ?? fallback.contactForm.subjectLabel,
+      subjectOptions:
+        [
+          data.contactForm?.subjectOptionOne,
+          data.contactForm?.subjectOptionTwo,
+          data.contactForm?.subjectOptionThree,
+          data.contactForm?.subjectOptionFour
+        ].filter((item): item is string => Boolean(item)).length
+          ? [
+              data.contactForm?.subjectOptionOne,
+              data.contactForm?.subjectOptionTwo,
+              data.contactForm?.subjectOptionThree,
+              data.contactForm?.subjectOptionFour
+            ].filter((item): item is string => Boolean(item))
+          : fallback.contactForm.subjectOptions,
+      messageLabel: data.contactForm?.messageLabel ?? fallback.contactForm.messageLabel,
+      messagePlaceholder: data.contactForm?.messagePlaceholder ?? fallback.contactForm.messagePlaceholder,
+      submitButtonLabel: data.contactForm?.submitButtonLabel ?? fallback.contactForm.submitButtonLabel,
+      submittingButtonLabel: data.contactForm?.submittingButtonLabel ?? fallback.contactForm.submittingButtonLabel,
+      whatsAppMessageIntro: data.contactForm?.whatsAppMessageIntro ?? fallback.contactForm.whatsAppMessageIntro
+    },
+    mapSection: {
+      heading: data.mapSection?.heading ?? fallback.mapSection.heading,
+      description: data.mapSection?.description ?? fallback.mapSection.description,
+      locationHeading: data.mapSection?.locationHeading ?? fallback.mapSection.locationHeading,
+      mapTitle: data.mapSection?.mapTitle ?? fallback.mapSection.mapTitle,
+      button: ctaFromCms(data.mapSection?.button ?? data.finalCTA, fallback.mapSection.button)
+    },
+    quote: {
+      ariaLabel: data.quote?.ariaLabel ?? fallback.quote.ariaLabel,
+      text: data.quote?.text ?? fallback.quote.text
+    },
     operationalHours:
       data.operationalHours?.flatMap((item) =>
         item.label && item.hours ? [{ label: item.label, hours: item.hours }] : []
