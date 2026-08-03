@@ -45,38 +45,38 @@ export function RoomsCollectionSection({ items = rooms, page }: RoomsPageSection
             <div className="rooms3-card__copy">
               <span className="rooms3-card__number">{String(index + 1).padStart(2, "0")}</span>
               <div className="rooms3-card__rating" aria-label={`${room.name} ${room.reviews}`}>
-                <span aria-hidden="true">* * * * *</span>
+                <span aria-hidden="true">{page?.listing.ratingSymbol ?? "* * * * *"}</span>
                 <small>{room.reviews}</small>
               </div>
               <h2>{room.name}</h2>
               <div className="rooms3-card__rate">
-                <span>Start from</span>
+                <span>{page?.listing.startFromLabel ?? "Start from"}</span>
                 <strong>{room.startingRate}</strong>
-                <small>/ night</small>
+                <small>{page?.listing.nightSuffixLabel ?? "/ night"}</small>
               </div>
               <p>{room.description}</p>
               <dl>
                 <div>
-                  <dt>Status</dt>
+                  <dt>{page?.listing.statusLabel ?? "Status"}</dt>
                   <dd className={room.status.toLowerCase().includes("left") ? "is-urgent" : undefined}>
                     {room.status}
                   </dd>
                 </div>
                 <div>
-                  <dt>Deposit</dt>
+                  <dt>{page?.listing.depositLabel ?? "Deposit"}</dt>
                   <dd>{room.deposit}</dd>
                 </div>
                 <div>
-                  <dt>Beds</dt>
+                  <dt>{page?.listing.bedsLabel ?? "Beds"}</dt>
                   <dd>{room.bed}</dd>
                 </div>
                 <div>
-                  <dt>Passenger</dt>
+                  <dt>{page?.listing.passengerLabel ?? "Passenger"}</dt>
                   <dd>{room.passenger}</dd>
                 </div>
               </dl>
               <Link className="rooms3-detail-link" href={`/rooms/${room.slug}`}>
-                View Detail <span aria-hidden="true">{"->"}</span>
+                {page?.listing.detailButtonLabel ?? "View Detail"} <span aria-hidden="true">{"->"}</span>
               </Link>
             </div>
             <Link className="rooms3-card__media" href={`/rooms/${room.slug}`} aria-label={`View ${room.name}`}>
@@ -102,7 +102,17 @@ export function RoomsPageSections({ items = rooms, page }: RoomsPageSectionsProp
     <>
       <RoomsHeroSection page={page} />
       <div className="rooms3-availability-shell">
-        <AvailabilityBar className="rooms3-availability" />
+        <AvailabilityBar
+          className="rooms3-availability"
+          ariaLabel={page?.availabilityBar?.formAriaLabel ?? page?.availabilityBar?.sectionAriaLabel}
+          checkInLabel={page?.availabilityBar?.checkInLabel}
+          checkOutLabel={page?.availabilityBar?.checkOutLabel}
+          guestsLabel={page?.availabilityBar?.guestsLabel}
+          promoLabel={page?.availabilityBar?.promotionLinkLabel}
+          promoHref={page?.availabilityBar?.promotionLinkURL}
+          submitLabel={page?.availabilityBar?.submitButtonLabel}
+          action={page?.availabilityBar?.submitButtonURL}
+        />
       </div>
       <RoomsCollectionSection items={items} page={page} />
     </>

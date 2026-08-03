@@ -8,6 +8,7 @@ type HomeAboutSectionProps = {
 
 export function HomeAboutSection({ content }: HomeAboutSectionProps = {}) {
   const about = content ?? {
+    eyebrow: "Little About Us",
     heading: "A best place to enjoy your life",
     description:
       "Set on the calm side of Nusa Ceningan, Villa Ceningan brings together warm island hospitality, quiet interiors, and the simple luxury of waking close to the water.",
@@ -32,7 +33,7 @@ export function HomeAboutSection({ content }: HomeAboutSectionProps = {}) {
       <div className="home2-about__content">
         <div className="section-kicker">
           <span />
-          <p>Little About Us</p>
+          <p>{about.eyebrow}</p>
         </div>
         <h2 id="home-about-title">{about.heading}</h2>
         <p>{about.description}</p>

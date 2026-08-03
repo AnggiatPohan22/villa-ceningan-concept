@@ -7,7 +7,11 @@ import { Button } from "@/components/shared/Button";
 type AvailabilityBarProps = {
   action?: string;
   ariaLabel?: string;
+  checkInLabel?: string;
+  checkOutLabel?: string;
   className?: string;
+  guestsLabel?: string;
+  promoLabel?: string;
   promoHref?: string;
   scrollTargetId?: string;
   submitLabel?: string;
@@ -42,7 +46,11 @@ function formatDate(value: string) {
 export function AvailabilityBar({
   action = "/reservation",
   ariaLabel = "Availability search",
+  checkInLabel = "Check-in",
+  checkOutLabel = "Check-out",
   className,
+  guestsLabel = "Guests",
+  promoLabel = "Have a promotion code?",
   promoHref = "/reservation",
   scrollTargetId,
   submitLabel = "Check Availability"
@@ -66,7 +74,7 @@ export function AvailabilityBar({
   return (
     <form action={action} aria-label={ariaLabel} className={classNames} onSubmit={handleSubmit}>
       <label className="availability-bar__field">
-        <span className="availability-bar__label">Check-in</span>
+        <span className="availability-bar__label">{checkInLabel}</span>
         <strong className="availability-bar__value">{checkIn.day}</strong>
         <small className="availability-bar__detail">/ {checkIn.month}</small>
         <input
@@ -82,7 +90,7 @@ export function AvailabilityBar({
         />
       </label>
       <label className="availability-bar__field">
-        <span className="availability-bar__label">Check-out</span>
+        <span className="availability-bar__label">{checkOutLabel}</span>
         <strong className="availability-bar__value">{checkOut.day}</strong>
         <small className="availability-bar__detail">/ {checkOut.month}</small>
         <input
@@ -98,7 +106,7 @@ export function AvailabilityBar({
         />
       </label>
       <label className="availability-bar__field">
-        <span className="availability-bar__label">Guests</span>
+        <span className="availability-bar__label">{guestsLabel}</span>
         <strong className="availability-bar__value">{availability.guests.padStart(2, "0")}</strong>
         <select
           aria-label="Guests"
@@ -116,7 +124,7 @@ export function AvailabilityBar({
       </label>
       <div className="availability-bar__cta">
         <Link className="availability-bar__promo" href={promoHref}>
-          Have a promotion code?
+          {promoLabel}
         </Link>
         <Button size="sm" type="submit" variant="secondary">
           {submitLabel}

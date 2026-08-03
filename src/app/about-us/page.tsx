@@ -30,7 +30,7 @@ export default async function AboutUsPage() {
       <AboutHeroSection page={page} />
       <AboutStorySection page={page} />
       <AboutPrinciplesSection page={page} />
-      <AboutTeamSection />
+      <AboutTeamSection page={page} />
       <AboutCtaSection page={page} />
     </main>
   );

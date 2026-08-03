@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Button } from "@/components/shared/Button";
-import { aboutPrinciples, aboutTeam } from "@/data/about";
 import { getWhatsappUrl, property } from "@/data/property";
 import type { CmsAboutPageContent } from "@/lib/cms/content";
 
@@ -25,7 +24,7 @@ export function AboutHeroSection({ page }: AboutPageProps = {}) {
         <h1 id="about-hero-title">{page?.hero.heading ?? "The Philosophy of Stillness"}</h1>
         <p>{page?.hero.description}</p>
       </div>
-      <a className="about-hero__cue" href="#about-story" aria-label="Scroll to our story">
+      <a className="about-hero__cue" href="#about-story" aria-label={page?.hero.scrollCueLabel ?? "Scroll to our story"}>
         <span />
       </a>
     </section>
@@ -57,14 +56,15 @@ export function AboutStorySection({ page }: AboutPageProps = {}) {
 }
 
 export function AboutPrinciplesSection({ page }: AboutPageProps = {}) {
-  const values = page?.values?.length ? page.values : aboutPrinciples;
+  const principles = page?.principles;
+  const values = principles?.items?.length ? principles.items : page?.values ?? [];
 
   return (
     <section className="about-principles" aria-labelledby="about-principles-title">
       <div className="section-heading section-heading--center">
-        <p className="eyebrow">Sustainable Luxury</p>
-        <h2 id="about-principles-title">Luxury is a responsibility.</h2>
-        <p>Our commitment is woven into details guests can feel: calm spaces, local care, and less excess.</p>
+        <p className="eyebrow">{principles?.eyebrow ?? "Sustainable Luxury"}</p>
+        <h2 id="about-principles-title">{principles?.heading ?? "Luxury is a responsibility."}</h2>
+        <p>{principles?.description ?? "Our commitment is woven into details guests can feel: calm spaces, local care, and less excess."}</p>
       </div>
       <div className="about-principles__grid">
         {values.map((principle, index) => (
@@ -87,18 +87,18 @@ export function AboutPrinciplesSection({ page }: AboutPageProps = {}) {
   );
 }
 
-export function AboutTeamSection() {
+export function AboutTeamSection({ page }: AboutPageProps = {}) {
+  const team = page?.team;
+  const members = team?.members ?? [];
+
   return (
     <section className="about-team" aria-labelledby="about-team-title">
       <div className="about-team__intro">
-        <h2 id="about-team-title">The Stewards of Villa Ceningan</h2>
-        <p>
-          "We do not design hospitality around noise. We design it around attention,
-          timing, and small comforts that make guests feel expected."
-        </p>
+        <h2 id="about-team-title">{team?.heading ?? "The Stewards of Villa Ceningan"}</h2>
+        <p>{team?.quote ?? "We do not design hospitality around noise. We design it around attention, timing, and small comforts that make guests feel expected."}</p>
       </div>
       <div className="about-team__grid">
-        {aboutTeam.map((member) => (
+        {members.map((member) => (
           <article className="about-team-card" key={member.name}>
             <Image src={member.image} alt={`${member.name}, ${member.role}`} width={520} height={650} />
             <h3>{member.name}</h3>

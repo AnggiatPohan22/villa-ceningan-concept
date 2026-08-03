@@ -16,6 +16,7 @@ export function HomeRoomsShowcaseSection({ items = rooms, content }: HomeRoomsSh
       <div className="home2-rooms__content">
         <p className="eyebrow">{content?.eyebrow ?? "Discover our rooms"}</p>
         <h2 id="home-rooms-title">{content?.heading ?? "Luxury interior"}</h2>
+        {content?.description ? <p>{content.description}</p> : null}
         <div className="home2-rooms__list">
           {items.map((room) => (
             <Link className="home2-room-row" href={`/rooms/${room.slug}`} key={room.slug}>

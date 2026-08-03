@@ -34,13 +34,13 @@ export default async function Home() {
   return (
     <>
       <HomeHeroSection content={cmsHome.hero} />
-      <HomeBookingSection />
+      <HomeBookingSection content={cmsHome.bookingPreview} />
       <HomeAboutSection content={cmsHome.introduction} />
       <HomeSignatureExperiencesSection services={cmsServices} content={cmsHome.signatureExperiences} />
       <HomeRoomsShowcaseSection items={cmsRooms} content={cmsHome.featuredRooms} />
       <HomeTestimonialSection />
       <HomeJournalPreviewSection articles={cmsBlog.blogArticles} content={cmsHome.journalPreview} />
-      <HomeContactPreviewSection />
+      <HomeContactPreviewSection content={cmsHome.contactPreview} />
     </>
   );
 }

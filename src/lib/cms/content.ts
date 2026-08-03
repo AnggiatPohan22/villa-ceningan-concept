@@ -8,6 +8,7 @@ import {
   warnCms,
   type CmsCollectionResponse
 } from "@/lib/cms/client";
+import { aboutPrinciples, aboutTeam } from "@/data/about";
 import { blogArticles, curatorChoices, featuredArticle, type BlogArticle } from "@/data/blog";
 import { gallery as fallbackGallery } from "@/data/gallery";
 import { footerNavigation, primaryNavigation, type NavigationItem } from "@/data/navigation";
@@ -62,6 +63,7 @@ export type HomeHeroContent = {
 };
 
 export type HomeAboutContent = {
+  eyebrow: string;
   heading: string;
   description: string;
   image: string;
@@ -78,12 +80,39 @@ export type HomeSectionContent = {
   };
 };
 
+export type HomeBookingPreviewContent = {
+  sectionAriaLabel: string;
+  formAriaLabel: string;
+  checkInLabel: string;
+  checkOutLabel: string;
+  guestsLabel: string;
+  promotionLinkLabel: string;
+  promotionLinkURL: string;
+  submitButtonLabel: string;
+  submitButtonURL: string;
+};
+
+export type HomeContactPreviewContent = {
+  eyebrow: string;
+  heading: string;
+  description: string;
+  locationHeading: string;
+  address: string;
+  emailLabel: string;
+  email: string;
+  phoneLabel: string;
+  phone: string;
+  mapEmbedURL: string;
+};
+
 export type HomePageContent = {
   hero: HomeHeroContent;
+  bookingPreview: HomeBookingPreviewContent;
   introduction: HomeAboutContent;
   featuredRooms: HomeSectionContent;
   signatureExperiences: HomeSectionContent;
   journalPreview: HomeSectionContent;
+  contactPreview: HomeContactPreviewContent;
   finalCTA: HomeSectionContent & {
     image?: string;
     imageAlt?: string;
@@ -97,6 +126,19 @@ export type CmsPageHeroContent = {
   description: string;
   image: string;
   imageAlt: string;
+  scrollCueLabel?: string;
+};
+
+export type CmsAvailabilityBarContent = {
+  sectionAriaLabel: string;
+  formAriaLabel: string;
+  checkInLabel: string;
+  checkOutLabel: string;
+  guestsLabel: string;
+  promotionLinkLabel: string;
+  promotionLinkURL: string;
+  submitButtonLabel: string;
+  submitButtonURL: string;
 };
 
 export type CmsListingPageContent = {
@@ -109,11 +151,20 @@ export type CmsListingPageContent = {
   listing: {
     heading: string;
     description: string;
+    ratingSymbol?: string;
+    startFromLabel?: string;
+    nightSuffixLabel?: string;
+    statusLabel?: string;
+    depositLabel?: string;
+    bedsLabel?: string;
+    passengerLabel?: string;
+    detailButtonLabel?: string;
     cta?: {
       label: string;
       url: string;
     };
   };
+  availabilityBar: CmsAvailabilityBarContent;
   seo?: CmsSeo | null;
 };
 
@@ -197,10 +248,31 @@ export type CmsAboutPageContent = {
     image: string;
     imageAlt: string;
   };
+  principles: {
+    eyebrow: string;
+    heading: string;
+    description: string;
+    items: Array<{
+      title: string;
+      description: string;
+      image?: string;
+    }>;
+  };
   values: Array<{
     title: string;
     description: string;
+    image?: string;
   }>;
+  team: {
+    heading: string;
+    quote: string;
+    members: Array<{
+      name: string;
+      role: string;
+      description: string;
+      image: string;
+    }>;
+  };
   finalCTA: {
     heading: string;
     label: string;
@@ -329,25 +401,62 @@ type CmsHomePage = {
     active?: boolean | null;
   } | null;
   introduction?: {
+    eyebrow?: string | null;
     heading?: string | null;
     description?: string | null;
     image?: unknown;
     active?: boolean | null;
   } | null;
+  bookingPreview?: {
+    sectionAriaLabel?: string | null;
+    formAriaLabel?: string | null;
+    checkInLabel?: string | null;
+    checkOutLabel?: string | null;
+    guestsLabel?: string | null;
+    promotionLinkLabel?: string | null;
+    promotionLinkURL?: string | null;
+    submitButtonLabel?: string | null;
+    submitButtonURL?: string | null;
+    active?: boolean | null;
+  } | null;
   featuredRooms?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    active?: boolean | null;
+  } | null;
+  typeOfRooms?: {
+    eyebrow?: string | null;
     heading?: string | null;
     description?: string | null;
     active?: boolean | null;
   } | null;
   signatureExperiences?: {
+    eyebrow?: string | null;
     heading?: string | null;
     description?: string | null;
+    button?: CmsCta | null;
     active?: boolean | null;
   } | null;
   journalPreview?: {
+    eyebrow?: string | null;
     heading?: string | null;
     description?: string | null;
+    button?: CmsCta | null;
     cta?: CmsCta | null;
+    active?: boolean | null;
+  } | null;
+  contactPreview?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    locationHeading?: string | null;
+    address?: string | null;
+    emailLabel?: string | null;
+    email?: string | null;
+    phoneLabel?: string | null;
+    phone?: string | null;
+    mapEmbedURL?: string | null;
     active?: boolean | null;
   } | null;
   finalCTA?: {
@@ -362,6 +471,36 @@ type CmsHomePage = {
   CmsSeoFields;
 
 type CmsListingPage = {
+  hero?: {
+    heading?: string | null;
+    description?: string | null;
+    image?: unknown;
+  } | null;
+  availabilityBar?: {
+    sectionAriaLabel?: string | null;
+    formAriaLabel?: string | null;
+    checkInLabel?: string | null;
+    checkOutLabel?: string | null;
+    guestsLabel?: string | null;
+    promotionLinkLabel?: string | null;
+    promotionLinkURL?: string | null;
+    submitButtonLabel?: string | null;
+    submitButtonURL?: string | null;
+  } | null;
+  roomCollection?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    ratingSymbol?: string | null;
+    startFromLabel?: string | null;
+    nightSuffixLabel?: string | null;
+    statusLabel?: string | null;
+    depositLabel?: string | null;
+    bedsLabel?: string | null;
+    passengerLabel?: string | null;
+    detailButtonLabel?: string | null;
+    button?: CmsCta | null;
+  } | null;
   heroEyebrow?: string | null;
   heroHeading?: string | null;
   heroDescription?: string | null;
@@ -478,6 +617,44 @@ type CmsHeader = {
 } & CmsPublishStatus;
 
 type CmsAboutPage = {
+  hero?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    image?: unknown;
+    scrollCueLabel?: string | null;
+  } | null;
+  story?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    paragraphs?: Array<{ text?: string | null }> | null;
+    image?: unknown;
+  } | null;
+  principles?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    description?: string | null;
+    items?: Array<{
+      title?: string | null;
+      description?: string | null;
+      image?: unknown;
+    }> | null;
+  } | null;
+  team?: {
+    heading?: string | null;
+    quote?: string | null;
+    members?: Array<{
+      name?: string | null;
+      role?: string | null;
+      description?: string | null;
+      image?: unknown;
+    }> | null;
+  } | null;
+  finalCTA?: ({
+    heading?: string | null;
+    image?: unknown;
+    button?: CmsCta | null;
+  } & CmsCta) | null;
   heroHeading?: string | null;
   heroDescription?: string | null;
   heroImage?: unknown;
@@ -489,7 +666,6 @@ type CmsAboutPage = {
     title?: string | null;
     description?: string | null;
   }> | null;
-  finalCTA?: CmsCta | null;
 } & CmsPublishStatus &
   CmsSeoFields;
 
@@ -783,11 +959,23 @@ function fallbackHomePage(): HomePageContent {
       }
     },
     introduction: {
+      eyebrow: "Welcome to Sanctuary",
       heading: "A best place to enjoy your life",
       description:
         "Set on the calm side of Nusa Ceningan, Villa Ceningan brings together warm island hospitality, quiet interiors, and the simple luxury of waking close to the water.",
       image: property.aboutImage,
       imageAlt: `${property.name} private terrace and outdoor bath atmosphere`
+    },
+    bookingPreview: {
+      sectionAriaLabel: "Booking preview",
+      formAriaLabel: "Availability search",
+      checkInLabel: "Check-in",
+      checkOutLabel: "Check-out",
+      guestsLabel: "Guests",
+      promotionLinkLabel: "Have a promotion code?",
+      promotionLinkURL: "/reservation",
+      submitButtonLabel: "Check Availability",
+      submitButtonURL: "/reservation"
     },
     featuredRooms: {
       eyebrow: "Discover our rooms",
@@ -827,6 +1015,18 @@ function fallbackHomePage(): HomePageContent {
       image: property.heroImage,
       imageAlt: `${property.name} peaceful retreat atmosphere`
     },
+    contactPreview: {
+      eyebrow: "Information",
+      heading: "Contact us",
+      description: "Set in the rhythm of Nusa Ceningan, close enough to island life and quiet enough to fully slow down.",
+      locationHeading: "Bali, Indonesia",
+      address: property.address,
+      emailLabel: "Email:",
+      email: property.email,
+      phoneLabel: "Call directly:",
+      phone: property.phone,
+      mapEmbedURL: property.mapEmbedUrl
+    },
     seo: null
   };
 }
@@ -845,6 +1045,18 @@ function isPublishedGlobal<T extends CmsPublishStatus>(data: T | null | undefine
 }
 
 function fallbackListingPage(kind: "rooms" | "services" | "blog"): CmsListingPageContent {
+  const availabilityBar = {
+    sectionAriaLabel: "Booking preview",
+    formAriaLabel: "Availability search",
+    checkInLabel: "Check-in",
+    checkOutLabel: "Check-out",
+    guestsLabel: "Guests",
+    promotionLinkLabel: "Have a promotion code?",
+    promotionLinkURL: "/reservation",
+    submitButtonLabel: "Check Availability",
+    submitButtonURL: "/reservation"
+  };
+
   if (kind === "services") {
     return {
       hero: {
@@ -867,7 +1079,8 @@ function fallbackListingPage(kind: "rooms" | "services" | "blog"): CmsListingPag
           label: "Start Reservation",
           url: "/reservation"
         }
-      }
+      },
+      availabilityBar
     };
   }
 
@@ -888,7 +1101,8 @@ function fallbackListingPage(kind: "rooms" | "services" | "blog"): CmsListingPag
       listing: {
         heading: "Latest Stories",
         description: "Read travel notes, culinary stories, wellness rituals, and behind-the-scenes updates."
-      }
+      },
+      availabilityBar
     };
   }
 
@@ -908,11 +1122,20 @@ function fallbackListingPage(kind: "rooms" | "services" | "blog"): CmsListingPag
     listing: {
       heading: "Stay where island calm meets personal villa comfort.",
       description: "Choose the room style that best matches your stay rhythm.",
+      ratingSymbol: "* * * * *",
+      startFromLabel: "Start from",
+      nightSuffixLabel: "/ night",
+      statusLabel: "Status",
+      depositLabel: "Deposit",
+      bedsLabel: "Beds",
+      passengerLabel: "Passenger",
+      detailButtonLabel: "View Detail",
       cta: {
         label: "See More Rooms",
         url: "/reservation"
       }
-    }
+    },
+    availabilityBar
   };
 }
 
@@ -922,20 +1145,41 @@ function mapListingPage(data: CmsListingPage, fallback: CmsListingPageContent): 
   return {
     hero: {
       eyebrow: data.heroEyebrow ?? fallback.hero.eyebrow,
-      heading: data.heroHeading ?? fallback.hero.heading,
-      description: data.heroDescription ?? fallback.hero.description,
-      image: getMediaUrl(data.heroImage, fallback.hero.image),
-      imageAlt: getMediaAlt(data.heroImage, fallback.hero.imageAlt)
+      heading: data.hero?.heading ?? data.heroHeading ?? fallback.hero.heading,
+      description: data.hero?.description ?? data.heroDescription ?? fallback.hero.description,
+      image: getMediaUrl(data.hero?.image ?? data.heroImage, fallback.hero.image),
+      imageAlt: getMediaAlt(data.hero?.image ?? data.heroImage, fallback.hero.imageAlt)
+    },
+    availabilityBar: {
+      sectionAriaLabel: data.availabilityBar?.sectionAriaLabel ?? fallback.availabilityBar.sectionAriaLabel,
+      formAriaLabel: data.availabilityBar?.formAriaLabel ?? fallback.availabilityBar.formAriaLabel,
+      checkInLabel: data.availabilityBar?.checkInLabel ?? fallback.availabilityBar.checkInLabel,
+      checkOutLabel: data.availabilityBar?.checkOutLabel ?? fallback.availabilityBar.checkOutLabel,
+      guestsLabel: data.availabilityBar?.guestsLabel ?? fallback.availabilityBar.guestsLabel,
+      promotionLinkLabel: data.availabilityBar?.promotionLinkLabel ?? fallback.availabilityBar.promotionLinkLabel,
+      promotionLinkURL: data.availabilityBar?.promotionLinkURL ?? fallback.availabilityBar.promotionLinkURL,
+      submitButtonLabel: data.availabilityBar?.submitButtonLabel ?? fallback.availabilityBar.submitButtonLabel,
+      submitButtonURL: data.availabilityBar?.submitButtonURL ?? fallback.availabilityBar.submitButtonURL
     },
     intro: {
-      eyebrow: data.heroEyebrow ?? fallback.intro.eyebrow,
-      heading: data.introHeading ?? fallback.intro.heading,
-      description: data.introDescription ?? fallback.intro.description
+      eyebrow: data.roomCollection?.eyebrow ?? data.heroEyebrow ?? fallback.intro.eyebrow,
+      heading: data.roomCollection?.heading ?? data.introHeading ?? fallback.intro.heading,
+      description: data.roomCollection?.description ?? data.introDescription ?? fallback.intro.description
     },
     listing: {
-      heading: data.listingHeading ?? fallback.listing.heading,
-      description: data.listingDescription ?? fallback.listing.description,
-      cta: cta?.label && cta.url ? { label: cta.label, url: cta.url } : fallback.listing.cta
+      heading: data.roomCollection?.heading ?? data.listingHeading ?? fallback.listing.heading,
+      description: data.roomCollection?.description ?? data.listingDescription ?? fallback.listing.description,
+      ratingSymbol: data.roomCollection?.ratingSymbol ?? fallback.listing.ratingSymbol,
+      startFromLabel: data.roomCollection?.startFromLabel ?? fallback.listing.startFromLabel,
+      nightSuffixLabel: data.roomCollection?.nightSuffixLabel ?? fallback.listing.nightSuffixLabel,
+      statusLabel: data.roomCollection?.statusLabel ?? fallback.listing.statusLabel,
+      depositLabel: data.roomCollection?.depositLabel ?? fallback.listing.depositLabel,
+      bedsLabel: data.roomCollection?.bedsLabel ?? fallback.listing.bedsLabel,
+      passengerLabel: data.roomCollection?.passengerLabel ?? fallback.listing.passengerLabel,
+      detailButtonLabel: data.roomCollection?.detailButtonLabel ?? fallback.listing.detailButtonLabel,
+      cta: (data.roomCollection?.button?.label && data.roomCollection.button.url)
+        ? { label: data.roomCollection.button.label, url: data.roomCollection.button.url }
+        : cta?.label && cta.url ? { label: cta.label, url: cta.url } : fallback.listing.cta
     },
     seo: data.seo ?? fallback.seo
   };
@@ -1043,7 +1287,8 @@ function fallbackAboutPage(): CmsAboutPageContent {
       description:
         "At Villa Ceningan, comfort is found in slower moments: the pool before breakfast, the hush after a day on the water, and the ease of being cared for without ceremony.",
       image: "/assets/img/hero-bg-2.webp",
-      imageAlt: `${property.name} surrounded by quiet island greenery`
+      imageAlt: `${property.name} surrounded by quiet island greenery`,
+      scrollCueLabel: "Scroll to our story"
     },
     story: {
       eyebrow: property.location,
@@ -1056,7 +1301,27 @@ function fallbackAboutPage(): CmsAboutPageContent {
       image: property.aboutImage,
       imageAlt: `${property.name} interior story and villa atmosphere`
     },
-    values: [],
+    principles: {
+      eyebrow: "Sustainable Luxury",
+      heading: "Luxury is a responsibility.",
+      description: "Our commitment is woven into details guests can feel: calm spaces, local care, and less excess.",
+      items: aboutPrinciples.map((principle) => ({
+        title: principle.title,
+        description: principle.description,
+        image: principle.image
+      }))
+    },
+    values: aboutPrinciples.map((principle) => ({
+      title: principle.title,
+      description: principle.description,
+      image: principle.image
+    })),
+    team: {
+      heading: "The Stewards of Villa Ceningan",
+      quote:
+        "We do not design hospitality around noise. We design it around attention, timing, and small comforts that make guests feel expected.",
+      members: aboutTeam
+    },
     finalCTA: {
       heading: "Reconnect with your island rhythm.",
       label: "Discover Availability",
@@ -1071,38 +1336,79 @@ function fallbackAboutPage(): CmsAboutPageContent {
 function mapAboutPage(data: CmsAboutPage): CmsAboutPageContent {
   const fallback = fallbackAboutPage();
   const storyText = extractLexicalText(data.storyContent || data.introductionContent);
-  const storyParagraphs = storyText ? [storyText] : fallback.story.paragraphs;
+  const storyParagraphs = data.story?.paragraphs?.map((item) => item.text).filter((item): item is string => Boolean(item)) ??
+    (storyText ? [storyText] : fallback.story.paragraphs);
+  const finalCTAButton = data.finalCTA && "button" in data.finalCTA ? data.finalCTA.button : data.finalCTA;
 
   return {
     hero: {
-      eyebrow: fallback.hero.eyebrow,
-      heading: data.heroHeading ?? fallback.hero.heading,
-      description: data.heroDescription ?? fallback.hero.description,
-      image: getMediaUrl(data.heroImage, fallback.hero.image),
-      imageAlt: getMediaAlt(data.heroImage, fallback.hero.imageAlt)
+      eyebrow: data.hero?.eyebrow ?? fallback.hero.eyebrow,
+      heading: data.hero?.heading ?? data.heroHeading ?? fallback.hero.heading,
+      description: data.hero?.description ?? data.heroDescription ?? fallback.hero.description,
+      image: getMediaUrl(data.hero?.image ?? data.heroImage, fallback.hero.image),
+      imageAlt: getMediaAlt(data.hero?.image ?? data.heroImage, fallback.hero.imageAlt),
+      scrollCueLabel: data.hero?.scrollCueLabel ?? fallback.hero.scrollCueLabel
     },
     story: {
-      eyebrow: property.location,
-      heading: data.introductionHeading ?? fallback.story.heading,
+      eyebrow: data.story?.eyebrow ?? property.location,
+      heading: data.story?.heading ?? data.introductionHeading ?? fallback.story.heading,
       paragraphs: storyParagraphs,
-      image: getMediaUrl(data.supportingImages?.[0], fallback.story.image),
-      imageAlt: getMediaAlt(data.supportingImages?.[0], fallback.story.imageAlt)
+      image: getMediaUrl(data.story?.image ?? data.supportingImages?.[0], fallback.story.image),
+      imageAlt: getMediaAlt(data.story?.image ?? data.supportingImages?.[0], fallback.story.imageAlt)
+    },
+    principles: {
+      eyebrow: data.principles?.eyebrow ?? fallback.principles.eyebrow,
+      heading: data.principles?.heading ?? fallback.principles.heading,
+      description: data.principles?.description ?? fallback.principles.description,
+      items:
+        data.principles?.items?.flatMap((value) =>
+          value.title
+            ? [
+                {
+                  title: value.title,
+                  description: value.description ?? "",
+                  image: getMediaUrl(value.image, "")
+                }
+              ]
+            : []
+        ) ?? fallback.principles.items
     },
     values:
-      data.values?.flatMap((value) =>
+      (data.principles?.items ?? data.values)?.flatMap((value) =>
         value.title
           ? [
               {
                 title: value.title,
-                description: value.description ?? ""
+                description: value.description ?? "",
+                image: "image" in value ? getMediaUrl(value.image, "") : undefined
               }
             ]
           : []
       ) ?? fallback.values,
+    team: {
+      heading: data.team?.heading ?? fallback.team.heading,
+      quote: data.team?.quote ?? fallback.team.quote,
+      members:
+        data.team?.members?.flatMap((member) =>
+          member.name
+            ? [
+                {
+                  name: member.name,
+                  role: member.role ?? "",
+                  description: member.description ?? "",
+                  image: getMediaUrl(member.image, fallback.team.members[0]?.image ?? property.aboutImage)
+                }
+              ]
+            : []
+        ) ?? fallback.team.members
+    },
     finalCTA: {
       ...fallback.finalCTA,
-      label: data.finalCTA?.label ?? fallback.finalCTA.label,
-      url: data.finalCTA?.url ?? fallback.finalCTA.url
+      heading: data.finalCTA && "heading" in data.finalCTA ? data.finalCTA.heading ?? fallback.finalCTA.heading : fallback.finalCTA.heading,
+      label: finalCTAButton?.label ?? fallback.finalCTA.label,
+      url: finalCTAButton?.url ?? fallback.finalCTA.url,
+      image: getMediaUrl(data.finalCTA && "image" in data.finalCTA ? data.finalCTA.image : undefined, fallback.finalCTA.image),
+      imageAlt: getMediaAlt(data.finalCTA && "image" in data.finalCTA ? data.finalCTA.image : undefined, fallback.finalCTA.imageAlt)
     },
     seo: data.seo ?? fallback.seo
   };
@@ -1236,26 +1542,42 @@ function mapCmsHomePage(data: CmsHomePage) {
       }
     },
     introduction: {
+      eyebrow: data.introduction?.eyebrow ?? fallback.introduction.eyebrow,
       heading: data.introduction?.heading ?? fallback.introduction.heading,
       description: data.introduction?.description ?? fallback.introduction.description,
       image: getMediaUrl(data.introduction?.image, fallback.introduction.image),
       imageAlt: getMediaAlt(data.introduction?.image, fallback.introduction.imageAlt)
     },
+    bookingPreview: {
+      sectionAriaLabel: data.bookingPreview?.sectionAriaLabel ?? fallback.bookingPreview.sectionAriaLabel,
+      formAriaLabel: data.bookingPreview?.formAriaLabel ?? fallback.bookingPreview.formAriaLabel,
+      checkInLabel: data.bookingPreview?.checkInLabel ?? fallback.bookingPreview.checkInLabel,
+      checkOutLabel: data.bookingPreview?.checkOutLabel ?? fallback.bookingPreview.checkOutLabel,
+      guestsLabel: data.bookingPreview?.guestsLabel ?? fallback.bookingPreview.guestsLabel,
+      promotionLinkLabel: data.bookingPreview?.promotionLinkLabel ?? fallback.bookingPreview.promotionLinkLabel,
+      promotionLinkURL: data.bookingPreview?.promotionLinkURL ?? fallback.bookingPreview.promotionLinkURL,
+      submitButtonLabel: data.bookingPreview?.submitButtonLabel ?? fallback.bookingPreview.submitButtonLabel,
+      submitButtonURL: data.bookingPreview?.submitButtonURL ?? fallback.bookingPreview.submitButtonURL
+    },
     featuredRooms: {
       ...fallback.featuredRooms,
-      heading: data.featuredRooms?.heading ?? fallback.featuredRooms.heading,
-      description: data.featuredRooms?.description ?? fallback.featuredRooms.description
+      eyebrow: data.typeOfRooms?.eyebrow ?? data.featuredRooms?.eyebrow ?? fallback.featuredRooms.eyebrow,
+      heading: data.typeOfRooms?.heading ?? data.featuredRooms?.heading ?? fallback.featuredRooms.heading,
+      description: data.typeOfRooms?.description ?? data.featuredRooms?.description ?? fallback.featuredRooms.description
     },
     signatureExperiences: {
       ...fallback.signatureExperiences,
+      eyebrow: data.signatureExperiences?.eyebrow ?? fallback.signatureExperiences.eyebrow,
       heading: data.signatureExperiences?.heading ?? fallback.signatureExperiences.heading,
-      description: data.signatureExperiences?.description ?? fallback.signatureExperiences.description
+      description: data.signatureExperiences?.description ?? fallback.signatureExperiences.description,
+      cta: ctaFromCms(data.signatureExperiences?.button, fallback.signatureExperiences.cta ?? { label: "All Signature Service", url: "/services" })
     },
     journalPreview: {
       ...fallback.journalPreview,
+      eyebrow: data.journalPreview?.eyebrow ?? fallback.journalPreview.eyebrow,
       heading: data.journalPreview?.heading ?? fallback.journalPreview.heading,
       description: data.journalPreview?.description ?? fallback.journalPreview.description,
-      cta: ctaFromCms(data.journalPreview?.cta, fallback.journalPreview.cta ?? { label: "View All Journal", url: "/blog" })
+      cta: ctaFromCms(data.journalPreview?.button ?? data.journalPreview?.cta, fallback.journalPreview.cta ?? { label: "View All Journal", url: "/blog" })
     },
     finalCTA: {
       ...fallback.finalCTA,
@@ -1270,6 +1592,18 @@ function mapCmsHomePage(data: CmsHomePage) {
           : fallback.finalCTA.cta,
       image: getMediaUrl(data.finalCTA?.backgroundImage, fallback.finalCTA.image ?? property.heroImage),
       imageAlt: getMediaAlt(data.finalCTA?.backgroundImage, fallback.finalCTA.imageAlt ?? property.name)
+    },
+    contactPreview: {
+      eyebrow: data.contactPreview?.eyebrow ?? fallback.contactPreview.eyebrow,
+      heading: data.contactPreview?.heading ?? fallback.contactPreview.heading,
+      description: data.contactPreview?.description ?? fallback.contactPreview.description,
+      locationHeading: data.contactPreview?.locationHeading ?? fallback.contactPreview.locationHeading,
+      address: data.contactPreview?.address ?? fallback.contactPreview.address,
+      emailLabel: data.contactPreview?.emailLabel ?? fallback.contactPreview.emailLabel,
+      email: data.contactPreview?.email ?? fallback.contactPreview.email,
+      phoneLabel: data.contactPreview?.phoneLabel ?? fallback.contactPreview.phoneLabel,
+      phone: data.contactPreview?.phone ?? fallback.contactPreview.phone,
+      mapEmbedURL: data.contactPreview?.mapEmbedURL ?? fallback.contactPreview.mapEmbedURL
     },
     seo: data.seo ?? fallback.seo
   };

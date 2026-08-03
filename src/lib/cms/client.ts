@@ -1,4 +1,5 @@
 const DEFAULT_REVALIDATE_SECONDS = 60;
+const DEFAULT_TIMEOUT_MS = 1500;
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 export type CmsCollectionResponse<T> = {
@@ -32,6 +33,19 @@ export function hasCmsBaseUrl() {
   return getCmsBaseUrl().length > 0;
 }
 
+function isLocalCmsBuildUrl(baseUrl: string) {
+  if (!baseUrl || isDevelopment) {
+    return false;
+  }
+
+  try {
+    const url = new URL(baseUrl);
+    return url.hostname === "localhost" || url.hostname === "127.0.0.1" || url.hostname === "::1";
+  } catch {
+    return false;
+  }
+}
+
 export function resolveCmsUrl(path: string) {
   const baseUrl = getCmsBaseUrl();
 
@@ -63,8 +77,18 @@ export async function fetchCms<T>(path: string, revalidate = DEFAULT_REVALIDATE_
     return null;
   }
 
+  if (isLocalCmsBuildUrl(getCmsBaseUrl())) {
+    warnCms(`Falling back to local data because local CMS URL is skipped during production build for ${path}.`);
+    return null;
+  }
+
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
   try {
-    const response = await fetch(url, {
+    const controller = new AbortController();
+    timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
+    const request = fetch(url, {
+      signal: controller.signal,
       ...(isDevelopment
         ? { cache: "no-store" as const }
         : {
@@ -73,6 +97,12 @@ export async function fetchCms<T>(path: string, revalidate = DEFAULT_REVALIDATE_
             }
           })
     });
+    const response = await Promise.race([
+      request,
+      new Promise<Response>((_, reject) => {
+        setTimeout(() => reject(new Error(`CMS request timed out after ${DEFAULT_TIMEOUT_MS}ms for ${path}`)), DEFAULT_TIMEOUT_MS);
+      })
+    ]);
 
     if (!response.ok) {
       warnCms(`Falling back to local data because ${path} returned ${response.status}.`);
@@ -84,6 +114,10 @@ export async function fetchCms<T>(path: string, revalidate = DEFAULT_REVALIDATE_
   } catch (error) {
     warnCms(`Falling back to local data because ${path} could not be fetched.`, error);
     return null;
+  } finally {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   }
 }
 

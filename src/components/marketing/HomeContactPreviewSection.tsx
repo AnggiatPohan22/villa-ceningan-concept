@@ -1,32 +1,38 @@
 import { property } from "@/data/property";
+import type { HomeContactPreviewContent } from "@/lib/cms/content";
 
-export function HomeContactPreviewSection() {
+type HomeContactPreviewSectionProps = {
+  content?: HomeContactPreviewContent;
+};
+
+export function HomeContactPreviewSection({ content }: HomeContactPreviewSectionProps = {}) {
   return (
     <section className="home2-contact" aria-labelledby="home-contact-title">
       <div className="home2-contact__map">
         <iframe
-          src={property.mapEmbedUrl}
+          src={content?.mapEmbedURL ?? property.mapEmbedUrl}
           title={`${property.name} location map`}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
       </div>
       <div className="home2-contact__content">
-        <p className="eyebrow">Information</p>
-        <h2 id="home-contact-title">Contact us</h2>
+        <p className="eyebrow">{content?.eyebrow ?? "Information"}</p>
+        <h2 id="home-contact-title">{content?.heading ?? "Contact us"}</h2>
+        {content?.description ? <p>{content.description}</p> : null}
         <div>
           <h3>
-            Bali, <span>Indonesia</span>
+            {content?.locationHeading ?? "Bali, Indonesia"}
           </h3>
-          <p>{property.address}</p>
+          <p>{content?.address ?? property.address}</p>
         </div>
         <div>
-          <small>Email:</small>
-          <a href={`mailto:${property.email}`}>{property.email}</a>
+          <small>{content?.emailLabel ?? "Email:"}</small>
+          <a href={`mailto:${content?.email ?? property.email}`}>{content?.email ?? property.email}</a>
         </div>
         <div className="home2-contact__phone">
-          <small>Call directly:</small>
-          <a href={`tel:${property.phone}`}>{property.phone}</a>
+          <small>{content?.phoneLabel ?? "Call directly:"}</small>
+          <a href={`tel:${content?.phone ?? property.phone}`}>{content?.phone ?? property.phone}</a>
         </div>
       </div>
     </section>

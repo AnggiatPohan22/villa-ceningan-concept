@@ -34,6 +34,7 @@ export function HomeSignatureExperiencesSection({ services, content }: HomeSigna
         <div>
           <p className="eyebrow">{content?.eyebrow ?? "Curated Moments"}</p>
           <h2 id="home-experiences-title">{content?.heading ?? "Signature Experiences"}</h2>
+          {content?.description ? <p>{content.description}</p> : null}
         </div>
         <div className="home2-experiences__arrows" aria-hidden="true">
           <span />
